@@ -16,25 +16,52 @@ def inches_to_feet_inches_str(inches):
 # Add helper function for processing wire height
 def process_wire_height(wire):
     """
-    Safely extract and convert a wire's measured height.
-    Returns height in inches as float if valid, or None if invalid/missing.
-    """
-    # Get height value with default of None if key doesn't exist
-    height_str = wire.get('_measured_height')
+    Extract height from wire data in inches.
     
-    # Convert to numerical value with validation
-    try:
-        # Skip processing if height is missing or empty
-        if height_str is None or height_str == '':
-            return None
-            
-        # Convert to float for numerical comparison
-        height_inches = float(height_str)
-        return height_inches
+    Args:
+        wire (dict): Wire data from Katapult
         
-    except (ValueError, TypeError) as e:
-        print(f"[DEBUG] Error converting height '{height_str}' to float: {str(e)}")
-        return None  # Return None to indicate invalid height
+    Returns:
+        float: Height in inches or None if not available
+    """
+    if not wire:
+        return None
+    
+    # Try to get height from the wire dict using various possible paths
+    height_val = None
+    
+    # First try measured height
+    if '_measured_height' in wire and wire['_measured_height'] is not None:
+        try:
+            height_val = float(wire['_measured_height'])
+            return height_val
+        except (ValueError, TypeError):
+            pass
+    
+    # Then try wire position
+    if 'position' in wire:
+        position = wire['position']
+        if isinstance(position, dict) and 'z' in position:
+            try:
+                height_val = float(position['z'])
+                # Convert from meters to inches if needed
+                if height_val < 100:  # Likely in meters
+                    height_val = height_val * 39.3701  # Convert to inches
+                return height_val
+            except (ValueError, TypeError):
+                pass
+    
+    # Finally check for a direct height field
+    if 'height' in wire:
+        try:
+            height_val = float(wire['height'])
+            if height_val < 100:  # Likely in meters
+                height_val = height_val * 39.3701  # Convert to inches
+            return height_val
+        except (ValueError, TypeError):
+            pass
+    
+    return None
 
 def meters_to_feet_inches_str(meters):
     if meters is None:
@@ -363,6 +390,9 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
     Returns:
         list: List of processed pole data dictionaries, ordered according to their appearance in the SPIDAcalc file
     """
+    # Set up enhanced logging
+    import debug_logging
+    logger = debug_logging.get_processing_logger()
     with open(katapult_path, 'r', encoding='utf-8') as f:
         katapult = json.load(f)
         
@@ -446,6 +476,9 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
                 label = loc.get('label')
                 norm = normalize_pole_id(label)
                 spida_lookup[norm] = loc
+
+    # Get the authoritative pole sequence for the job
+    pole_sequence = get_pole_sequence_from_spidacalc(spida)
 
     poles = []
     for node_id, node in katapult.get('nodes', {}).items():
@@ -1186,9 +1219,10 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
                                 'description': f"{owner} {desc}".strip(),
                                 'existing_height': 'N/A',
                                 'proposed_height': meters_to_feet_inches_str(meters),
-                                'midspan_proposed': 'N/A',
+                                'midspan_proposed': meters_to_feet_inches_str(midspan_meters) if midspan_meters is not None else 'N/A',
                                 'raw_existing_height_inches': 0,
                                 'raw_proposed_height_inches': float(meters) * 39.3701 if meters is not None else 0,
+                                'raw_proposed_midspan_inches': float(midspan_meters) * 39.3701 if midspan_meters is not None else None,
                                 'wire_id': id_str,
                                 'usage_group': usage_group
                             }
@@ -1244,9 +1278,10 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
                                 'description': f"{owner} {desc}".strip(),
                                 'existing_height': 'N/A',
                                 'proposed_height': meters_to_feet_inches_str(meters),
-                                'midspan_proposed': 'N/A',
+                                'midspan_proposed': meters_to_feet_inches_str(midspan_meters) if midspan_meters is not None else 'N/A',
                                 'raw_existing_height_inches': 0,
                                 'raw_proposed_height_inches': float(meters) * 39.3701 if meters is not None else 0,
+                                'raw_proposed_midspan_inches': float(midspan_meters) * 39.3701 if midspan_meters is not None else None,
                                 'equipment_id': id_str
                             }
                             
@@ -1409,13 +1444,30 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
                                 if desc in attacher_map and isinstance(attacher_map[desc], dict):
                                     current_height = attacher_map[desc].get('raw_existing_height_inches', 0)
                                 
+                                # Track if this owner has proposed wires
+                                if is_proposed:
+                                    normalized_owner = normalize_owner(owner)
+                                    if normalized_owner not in owners_with_pole_attachment_changes:
+                                        owners_with_pole_attachment_changes.append(normalized_owner)
+                                    print(f"[DEBUG] Found proposed wire for {normalized_owner} - adding to owners with changes")
+                                
                                 if desc not in attacher_map or existing_height_float > current_height:
+                                    proposed_height_val = 'N/A'  # Renamed variable for clarity
+                                    midspan_proposed_val = 'N/A' # Initialize midspan_proposed for this path
+                                    
+                                    # If wire is explicitly marked as proposed, set its proposed ATTACHMENT height
+                                    if is_proposed:
+                                        proposed_height_val = inches_to_feet_inches_str(existing_height_float)
+                                        print(f"[DEBUG] Setting proposed ATTACHMENT height for {desc} to {proposed_height_val} based on proposed flag")
+                                        # midspan_proposed_val remains 'N/A' here, to be potentially filled by later logic using actual midspan data
+                                        
                                     attacher_map[desc] = {
                                         'description': desc,
                                         'existing_height': inches_to_feet_inches_str(existing_height),
                                         'raw_existing_height_inches': existing_height_float,
-                                        'proposed_height': 'N/A',  # Only set if there's a change
-                                        'midspan_proposed': 'N/A',
+                                        'proposed_height': proposed_height_val,
+                                        'midspan_proposed': midspan_proposed_val, 
+                                        'is_proposed': is_proposed,
                                     }
                             except (ValueError, TypeError) as e:
                                 print(f"[DEBUG] Error converting height '{existing_height}' to float: {str(e)}")
@@ -1431,12 +1483,230 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
                         print(f"[DEBUG] Skipping non-dict attacher '{key}': {value}")
                 except Exception as e:
                     print(f"[DEBUG] Error processing attacher '{key}': {str(e)}")
+                    
+            # Import neutral identification module
+            import neutral_identification as ni
+            import debug_logging
+            
+            logger.info(f"Processing attachments below neutral for pole {pole_number}")
+            
+            # Prepare pole data structure for neutral identification
+            temp_pole_data = {
+                'pole_number': pole_number,
+                'photos': node.get('photos', {}),
+                'attachers': attachers_list
+            }
+            
+            # Identify neutral wires from Katapult and SPIDAcalc
+            neutral_wires_katapult = ni.identify_neutrals_katapult(temp_pole_data, katapult)
+            
+            # Add SPIDAcalc neutral wires if available
+            neutral_wires_spida = []
+            spida_pole_data = None
+            if norm_pole_number in spida_lookup:
+                spida_pole_data = spida_lookup[norm_pole_number]
+                neutral_wires_spida = ni.identify_neutrals_spidacalc(temp_pole_data, spida_pole_data)
+            
+            # Combine all neutral wires and find the highest
+            all_neutral_wires = neutral_wires_katapult + neutral_wires_spida
+            highest_neutral = ni.get_highest_neutral(all_neutral_wires)
+            
+            # Identify attachments below the highest neutral wire
+            attachments_below_neutral = ni.identify_attachments_below_neutral(
+                temp_pole_data, highest_neutral, katapult, spida_pole_data)
+            
+            # Log the results
+            debug_logging.log_pole_summary(logger, temp_pole_data, all_neutral_wires, attachments_below_neutral)
+            
+            # Store attachments_below_neutral for further processing and output
+            attachments_below_neutral_for_pole = attachments_below_neutral
+            
+            # Debug output for attachments below neutral
+            print(f"[DEBUG] Found {len(attachments_below_neutral)} attachments below neutral for pole {pole_number}")
+            for i, attacher in enumerate(attachments_below_neutral):
+                print(f"[DEBUG]   {i+1}. {attacher.get('description')} at {attacher.get('existing_height')}")
+
+            # Sort primary attachers before adding reference/backspan blocks
+            # Helper for sorting:
+            def get_sort_height_for_attacher(att):
+                raw_existing = att.get('raw_existing_height_inches')
+                raw_proposed = att.get('raw_proposed_height_inches')
+                if raw_existing is not None:
+                    return raw_existing
+                if raw_proposed is not None: # For new installs, sort by proposed
+                    return raw_proposed
+                return -float('inf') # Should not happen if height is always present
+
+            primary_attachers_list = sorted(
+                [att for att in attachers_list if not att.get('type', '').startswith('header_')], # Exclude any headers if accidentally added early
+                key=get_sort_height_for_attacher,
+                reverse=True
+            )
+            
+            final_attachers_list = list(primary_attachers_list) # Start with sorted primary attachers
+
+            # --- ENHANCED REFERENCE AND BACKSPAN PROCESSING ---
+            print(f"[DEBUG] ===== Processing Backspan and Reference Spans for pole {pole_number} =====")
+            
+            # 1. First identify the previous pole in the sequence for backspan detection
+            current_pole_index = -1
+            previous_pole_id = None
+            
+            try:
+                current_pole_index = pole_sequence.index(norm_pole_number)
+                if current_pole_index > 0:
+                    previous_pole_id = pole_sequence[current_pole_index - 1]
+                    print(f"[DEBUG] Previous pole for {norm_pole_number} is {previous_pole_id} (position {current_pole_index-1} in sequence)")
+            except ValueError:
+                print(f"[DEBUG] Pole {norm_pole_number} not found in authoritative pole sequence")
+            
+            # 2. Lookup the node_id for the previous pole for backspan identification
+            previous_pole_node_id = None
+            if previous_pole_id:
+                for node_id_check, node_data in katapult.get('nodes', {}).items():
+                    node_pole_number = get_pole_number_from_node_id(katapult, node_id_check)
+                    if node_pole_number and normalize_pole_id(node_pole_number) == previous_pole_id:
+                        previous_pole_node_id = node_id_check
+                        print(f"[DEBUG] Found node ID for previous pole {previous_pole_id}: {previous_pole_node_id}")
+                        break
+            
+            # 3. Track processed connections to avoid duplication
+            processed_connections = set()
+            
+            # 4. First process backspan (if it exists)
+            if previous_pole_node_id:
+                backspan_conn_id = None
+                backspan_conn_data = None
+                
+                # Find the connection between current pole and previous pole
+                for conn_id, conn_data in katapult.get('connections', {}).items():
+                    current_pole_node_id = node_id
+                    
+                    # Check if this connection connects current pole and previous pole
+                    if ((conn_data.get('node_id_1') == current_pole_node_id and conn_data.get('node_id_2') == previous_pole_node_id) or
+                        (conn_data.get('node_id_2') == current_pole_node_id and conn_data.get('node_id_1') == previous_pole_node_id)):
+                        backspan_conn_id = conn_id
+                        backspan_conn_data = conn_data
+                        print(f"[DEBUG] Found backspan connection {conn_id} between {norm_pole_number} and {previous_pole_id}")
+                        break
+                
+                # Process backspan connection if found
+                if backspan_conn_data:
+                    other_node_id = previous_pole_node_id
+                    
+                    # Process the backspan as a reference span
+                    backspan_header, backspan_attachments = process_reference_span(
+                        katapult, 
+                        current_node_id=node_id,  # FIXED: renamed from current_pole_node_id
+                        other_node_id=other_node_id,
+                        conn_id=backspan_conn_id,
+                        conn_data=backspan_conn_data,
+                        is_backspan=True,
+                        previous_pole_id=previous_pole_id
+                    )
+                    
+                    # Add to final attachers list
+                    final_attachers_list.append(backspan_header)
+                    final_attachers_list.extend(backspan_attachments)
+                    
+                    # Mark as processed
+                    processed_connections.add(backspan_conn_id)
+            
+            # 5. Process all other reference spans
+            for conn_id, conn_data in katapult.get('connections', {}).items():
+                # Skip if already processed
+                if conn_id in processed_connections:
+                    continue
+                
+                # Check if this connection involves the current pole
+                if conn_data.get('node_id_1') == node_id or conn_data.get('node_id_2') == node_id:
+                    # Get the other node ID
+                    other_node_id = conn_data.get('node_id_2') if conn_data.get('node_id_1') == node_id else conn_data.get('node_id_1')
+                    
+                    # Check if this is an explicit reference span
+                    connection_type_attrs = conn_data.get('attributes', {}).get('connection_type', {})
+                    is_reference = False
+                    
+                    # Path 1: Check the 'connection_type.button_added' path
+                    if isinstance(connection_type_attrs, dict):
+                        button_added = connection_type_attrs.get('button_added')
+                        if button_added == 'reference':
+                            is_reference = True
+                            print(f"[DEBUG] Connection {conn_id} IS a reference span (via connection_type.button_added)")
+                    
+                    # Additional reference checks if not already identified
+                    if not is_reference:
+                        # Path 2: Try direct button_added path
+                        if 'button_added' in conn_data.get('attributes', {}):
+                            button_added_direct = conn_data.get('attributes', {}).get('button_added')
+                            if button_added_direct == 'reference':
+                                is_reference = True
+                                print(f"[DEBUG] Connection {conn_id} IS a reference span (via direct button_added)")
+                        
+                        # Path 3: Try the "reference" attribute
+                        if not is_reference and 'reference' in conn_data.get('attributes', {}):
+                            ref_attr = conn_data.get('attributes', {}).get('reference')
+                            if ref_attr is True or (isinstance(ref_attr, str) and ref_attr.lower() == 'true'):
+                                is_reference = True
+                                print(f"[DEBUG] Connection {conn_id} IS a reference span (via reference attribute)")
+                        
+                        # Path 4: Check for reference in span_type attributes
+                        for key in ['span_type', 'spanType', 'connection_classification', 'span_classification']:
+                            if key in conn_data.get('attributes', {}):
+                                span_type_value = conn_data.get('attributes', {}).get(key)
+                                if isinstance(span_type_value, dict):
+                                    span_type = next(iter(span_type_value.values()), None)
+                                else:
+                                    span_type = span_type_value
+                                
+                                # If span_type explicitly mentions reference
+                                if span_type and isinstance(span_type, str) and 'reference' in span_type.lower():
+                                    is_reference = True
+                                    print(f"[DEBUG] Connection {conn_id} IS a reference span (via {key})")
+                                    break
+                    
+                    if is_reference:
+                        # Process the reference span
+                        ref_header, ref_attachments = process_reference_span(
+                            katapult, 
+                            current_node_id=node_id,  # FIXED: renamed from current_pole_node_id
+                            other_node_id=other_node_id,
+                            conn_id=conn_id,
+                            conn_data=conn_data,
+                            is_backspan=False
+                        )
+                        
+                        # Add to final attachers list
+                        final_attachers_list.append(ref_header)
+                        final_attachers_list.extend(ref_attachments)
+                        
+                        # Mark as processed
+                        processed_connections.add(conn_id)
+            
+            # Final check - summarize what we processed
+            reference_count = sum(1 for a in final_attachers_list if a.get('type') == 'reference_header')
+            print(f"[DEBUG] After processing all connections for pole {pole_number}:")
+            print(f"[DEBUG] - Added {reference_count} reference/backspan blocks")
+            print(f"[DEBUG] - Total attachers count: {len(final_attachers_list)}")
             
             # Calculate Midspan Proposed value based on owners with attachment height changes
             lowest_proposed_midspan_for_changed_type_inches = None
             
-            if owners_with_pole_attachment_changes:
-                print(f"[DEBUG] Pole {pole_number}: Found attachment height changes for owners: {owners_with_pole_attachment_changes}")
+            # Check if there are any new installations (no existing height but has proposed height)
+            has_new_installations = False
+            for attacher in attachers_list:
+                if (attacher.get('existing_height', 'N/A') == 'N/A' and 
+                    attacher.get('proposed_height', 'N/A') != 'N/A'):
+                    has_new_installations = True
+                    print(f"[DEBUG] Found new installation: {attacher.get('description')}")
+                    break
+            
+            # Only calculate lowest midspan height if there are new installations or proposed changes
+            if has_new_installations or owners_with_pole_attachment_changes:
+                if owners_with_pole_attachment_changes:
+                    print(f"[DEBUG] Pole {pole_number}: Found attachment height changes or proposed wires for owners: {owners_with_pole_attachment_changes}")
+                else:
+                    print(f"[DEBUG] Pole {pole_number}: Found new installations that need midspan values")
                 
                 # Collect all midspan heights for owners with changes
                 midspan_heights_for_changed_owners = []
@@ -1506,6 +1776,7 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
                                 wire_metadata = extract_wire_metadata(wire, trace)
                                 owner = wire_metadata['owner']
                                 cable_type = wire_metadata['cable_type']
+                                is_proposed = wire_metadata['is_proposed']
                                 
                                 if not owner:
                                     print(f"[DEBUG] Wire has no owner, trace_id: {trace_id}, skipping")
@@ -1514,14 +1785,23 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
                                 # Normalize owner name for consistent comparison
                                 normalized_owner = normalize_owner(owner)
                                 
-                                # Check if this wire belongs to an owner with attachment height changes
-                                if normalized_owner in owners_with_pole_attachment_changes:
-                                    print(f"[DEBUG] Found wire for owner with changes: {normalized_owner} (cable_type: {cable_type})")
+                                # For new installations, we want the midspan height of ALL wires
+                                # Otherwise, check if this wire belongs to an owner with attachment height changes
+                                # OR if the wire itself is marked as proposed
+                                should_include_wire = has_new_installations or normalized_owner in owners_with_pole_attachment_changes or is_proposed
+                                
+                                if should_include_wire:
+                                    print(f"[DEBUG] Processing wire for midspan calculation: {normalized_owner} (cable_type: {cable_type}, proposed: {is_proposed})")
+                                    
+                                    # If the wire is directly marked as proposed, also add to owners with changes
+                                    if is_proposed and normalized_owner not in owners_with_pole_attachment_changes:
+                                        owners_with_pole_attachment_changes.append(normalized_owner)
+                                        print(f"[DEBUG] Adding {normalized_owner} to owners with changes because wire is marked as proposed")
                                     
                                     # Process wire height
                                     h = process_wire_height(wire)
                                     if h is not None:
-                                        print(f"[DEBUG] Wire height for {normalized_owner}: {h} inches")
+                                        print(f"[DEBUG] Wire height for {normalized_owner}: {h} inches (proposed: {is_proposed})")
                                         # Add this height to our collection
                                         midspan_heights_for_changed_owners.append((normalized_owner, h))
                 
@@ -1538,10 +1818,11 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
                     print(f"[DEBUG] All midspan heights for changed owners: {midspan_heights_for_changed_owners}")
                 else:
                     print(f"[DEBUG] No midspan heights found for owners with changes")
+            else:
+                print(f"[DEBUG] No new installations or attachment changes for pole {pole_number}")
             
             # Convert the lowest midspan height to feet-inches string format
             midspan_proposed_str = inches_to_feet_inches_str(lowest_proposed_midspan_for_changed_type_inches)
-            print(f"[DEBUG] Mid-Span Proposed for pole {pole_number}: {midspan_proposed_str}")
             
             # Now process midspan proposed values for attachers - AFTER we've calculated the pole-level midspan value
             if spida and recommended_design and measured_design:
@@ -1553,56 +1834,78 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
                     owner = owner_parts[0] if owner_parts else ''
                     normalized_owner = normalize_owner(owner)
                     
-                    # Only process if we have both proposed and existing heights and they're different
-                    if (attacher.get('proposed_height', 'N/A') != 'N/A' and 
-                        attacher.get('existing_height', 'N/A') != 'N/A' and 
-                        attacher.get('proposed_height') != attacher.get('existing_height')):
+                    # Process if we have proposed height data from SPIDAcalc OR the wire is marked as proposed
+                    # OR if the attachment has a proposed height value that's not 'N/A'
+                    is_proposed = attacher.get('is_proposed', False)
+                    has_proposed_height = attacher.get('proposed_height', 'N/A') != 'N/A'
+                    has_existing_height = attacher.get('existing_height', 'N/A') != 'N/A'
+                    has_different_heights = (has_proposed_height and has_existing_height and 
+                                          attacher.get('proposed_height') != attacher.get('existing_height'))
+                    
+                    # UPDATED LOGIC: Apply mid-span proposed values according to attachment-level action rules
+                    
+                    # RULE: Normal existing attachments with no move have no midspan value in column O
+                    if has_existing_height and (not has_proposed_height or not has_different_heights):
+                        attacher['midspan_proposed'] = 'N/A'
+                        print(f"[DEBUG] Setting midspan proposed for {desc} to N/A - existing attachment without move")
+                        continue
                         
-                        print(f"[DEBUG] Processing midspan proposed value for attachment with height change: {desc}")
-                        
-                        # First check direct SPIDAcalc data
-                        measured_wires = measured_design.get('structure', {}).get('wires', [])
-                        recommended_wires = recommended_design.get('structure', {}).get('wires', [])
-                        
-                        # Find matching wires by description
-                        spida_midspan_found = False
-                        for m_wire in measured_wires:
-                            m_owner = m_wire.get('owner', {}).get('id', '')
-                            m_desc = m_wire.get('clientItem', {}).get('description', '')
-                            m_wire_desc = f"{m_owner} {m_desc}".strip()
-                            
-                            if m_wire_desc == desc:
-                                # Found matching wire in measured design
-                                m_midspan = m_wire.get('midspanHeight', {}).get('value')
-                                
-                                # Look for same wire in recommended design
-                                for r_wire in recommended_wires:
-                                    r_owner = r_wire.get('owner', {}).get('id', '')
-                                    r_desc = r_wire.get('clientItem', {}).get('description', '')
-                                    r_wire_desc = f"{r_owner} {r_desc}".strip()
-                                    
-                                    if r_wire_desc == desc:
-                                        # Found matching wire in recommended design
-                                        r_midspan = r_wire.get('midspanHeight', {}).get('value')
-                                        
-                                        # Check if midspan heights differ
-                                        if m_midspan is not None and r_midspan is not None:
-                                            m_midspan_inches = float(m_midspan) * 39.3701
-                                            r_midspan_inches = float(r_midspan) * 39.3701
-                                            
-                                            # If midspan heights differ by more than 0.1 inch, populate proposed value
-                                            if abs(m_midspan_inches - r_midspan_inches) > 0.1:
-                                                attacher['midspan_proposed'] = meters_to_feet_inches_str(r_midspan)
-                                                print(f"[DEBUG] SPIDAcalc midspan change detected for {desc}: {meters_to_feet_inches_str(m_midspan)} to {meters_to_feet_inches_str(r_midspan)}")
-                                                spida_midspan_found = True
-                                                
-                        # If we couldn't find SPIDAcalc midspan data but we know this owner has a height change
-                        # For Katapult midspan data - use the pole-level calculated value
-                        if not spida_midspan_found and normalized_owner in owners_with_pole_attachment_changes:
+                    # RULE: Existing attachment with move (existing_height and different proposed_height)
+                    # Should not have midspan value in column O
+                    if has_existing_height and has_proposed_height and has_different_heights:
+                        attacher['midspan_proposed'] = 'N/A'
+                        print(f"[DEBUG] Setting midspan proposed for {desc} to N/A - existing attachment with move")
+                        continue
+                    
+                    # RULE: New aerial install (proposed_height but no existing_height) should show midspan
+                    if has_proposed_height and not has_existing_height:
+                        # Make sure midspan_proposed is not 'N/A' if there's a proposed height
+                        if attacher.get('midspan_proposed', 'N/A') == 'N/A':
                             if lowest_proposed_midspan_for_changed_type_inches is not None:
-                                # Use the lowest midspan height for wires of this owner
+                                # Use the pole-level midspan proposed value
                                 attacher['midspan_proposed'] = midspan_proposed_str
-                                print(f"[DEBUG] Using pole-level midspan proposed value for {desc}: {midspan_proposed_str}")
+                                print(f"[DEBUG] Setting midspan proposed for new install {desc} to {midspan_proposed_str}")
+                            else:
+                                # If no pole-level midspan value, use the proposed height as midspan
+                                attacher['midspan_proposed'] = attacher['proposed_height']
+                                print(f"[DEBUG] No pole-level midspan value. Using proposed height for {desc} as midspan: {attacher['proposed_height']}")
+            else:
+                # When SPIDAcalc data isn't available, still apply the same rules
+                for attacher in attachers_list:
+                    desc = attacher.get('description', '')
+                    
+                    # Get relevant attachment properties
+                    is_proposed = attacher.get('is_proposed', False)
+                    has_proposed_height = attacher.get('proposed_height', 'N/A') != 'N/A'
+                    has_existing_height = attacher.get('existing_height', 'N/A') != 'N/A'
+                    has_different_heights = (has_proposed_height and has_existing_height and 
+                                          attacher.get('proposed_height') != attacher.get('existing_height'))
+                                          
+                    # RULE: Normal existing attachments with no move have no midspan value in column O  
+                    if has_existing_height and (not has_proposed_height or not has_different_heights):
+                        attacher['midspan_proposed'] = 'N/A'
+                        print(f"[DEBUG] Setting midspan proposed for {desc} to N/A - existing attachment without move")
+                        continue
+                        
+                    # RULE: Existing attachment with move (existing_height and different proposed_height)
+                    # Should not have midspan value in column O
+                    if has_existing_height and has_proposed_height and has_different_heights:
+                        attacher['midspan_proposed'] = 'N/A'
+                        print(f"[DEBUG] Setting midspan proposed for {desc} to N/A - existing attachment with move")
+                        continue
+                    
+                    # RULE: New aerial install (proposed_height but no existing_height) should show midspan
+                    if has_proposed_height and not has_existing_height:
+                        if attacher.get('midspan_proposed', 'N/A') == 'N/A':
+                            if lowest_proposed_midspan_for_changed_type_inches is not None:
+                                # Use the pole-level midspan proposed value
+                                attacher['midspan_proposed'] = midspan_proposed_str
+                                print(f"[DEBUG] Setting midspan proposed for new install {desc} to {midspan_proposed_str}")
+                            else:
+                                # If no pole-level midspan value, use the proposed height as midspan
+                                attacher['midspan_proposed'] = attacher['proposed_height']
+                                print(f"[DEBUG] No pole-level midspan value. Using proposed height for {desc} as midspan: {attacher['proposed_height']}")
+            
             # Determine pole status based on make-ready notes and other factors
             pole_status = "No Change"  # Default status
             
@@ -1633,7 +1936,8 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
                 'from_pole': from_pole or 'N/A',
                 'to_pole': to_pole or 'N/A',
                 'connections': pole_connections,  # Store all connections for potential future use
-                'attachers': attachers_list,
+                'attachers': final_attachers_list, # Use the list with headers and sorted sections
+                'attachments_below_neutral': attachments_below_neutral_for_pole,  # Use the stored attachments below neutral
                 # Geographic data for map display
                 'latitude': node.get('latitude'),
                 'longitude': node.get('longitude'),
@@ -1661,89 +1965,46 @@ def process_make_ready_report(katapult_path, spidacalc_path=None, target_poles=N
 
 def extract_wire_metadata(wire, trace):
     """
-    Extract owner, cable type and other metadata from wire and trace data.
+    Extract important metadata from a wire and its trace.
     
     Args:
-        wire (dict): The wire data from Katapult
-        trace (dict): The trace data from Katapult
+        wire (dict): Wire data object
+        trace (dict): Trace data or None
         
     Returns:
-        dict: Dictionary containing extracted metadata
+        dict: Dictionary with owner, cable_type, and is_proposed flags
     """
-    owner = None
-    cable_type = None
-    wire_type = None
-    
-    # Extract owner with multiple fallbacks
-    if isinstance(trace, dict):
-        # Try direct company field
-        owner = trace.get('company', '')
-        
-        # Fallback to attributes.attacher
-        if (not owner or owner.strip() == '') and 'attributes' in trace:
-            attacher = trace['attributes'].get('attacher', {})
-            if isinstance(attacher, dict):
-                owner = attacher.get('button_added', '') or attacher.get('-Imported', '')
-            elif isinstance(attacher, str):
-                owner = attacher
-        
-        # Additional fallback for owner field
-        if (not owner or owner.strip() == '') and 'owner' in trace:
-            trace_owner = trace.get('owner')
-            if isinstance(trace_owner, dict):
-                owner = trace_owner.get('id', '')
-            elif isinstance(trace_owner, str):
-                owner = trace_owner
-                
-        # Extract cable type with fallbacks
-        cable_type = trace.get('cable_type', '')
-        
-        # Try to determine wire type from usageGroup or other indicators
-        wire_type = trace.get('usageGroup', '').upper()
-        
-        # If no usageGroup, try to infer from cable_type
-        if not wire_type and cable_type:
-            cable_type_upper = cable_type.upper()
-            if any(power_type in cable_type_upper for power_type in 
-                  ['PRIMARY', 'NEUTRAL', 'SECONDARY', 'ELECTRICAL', 'POWER', 'PHASE']):
-                wire_type = 'POWER'
-            elif any(comm_type in cable_type_upper for comm_type in 
-                    ['COM', 'FIBER', 'TELCO', 'CABLE', 'TELEPHONE', 'CATV']):
-                wire_type = 'COMMUNICATION'
-    
-    # Normalize owner
-    owner = normalize_owner(owner)
-    
-    # Final fallback for owner based on wire height
-    if (not owner or owner.strip() == '') and wire:
-        # Try to determine owner from other wire properties
-        # For example, medium-high wires are often power, very high wires primary
-        height = process_wire_height(wire)
-        if height and height > 300:  # Very high wires (>25ft) are often power
-            owner = "CPS ENERGY"  # Default to CPS for high wires
-            wire_type = "POWER"
-            if not cable_type:
-                cable_type = "PRIMARY"
-        elif height and height < 150:  # Low wires (<12.5ft) often communications
-            if not wire_type:
-                wire_type = "COMMUNICATION"
-            if not cable_type:
-                cable_type = "COMM LINE"
-    
-    # If we have a wire_type but no owner, make a reasonable guess
-    if wire_type == 'POWER' and (not owner or owner.strip() == ''):
-        owner = "CPS ENERGY"  # Assume power wires belong to the utility
-    elif wire_type == 'COMMUNICATION' and (not owner or owner.strip() == ''):
-        owner = "COMMUNICATIONS"  # Generic label for unidentified comm
-    
-    print(f"[DEBUG] Extracted wire metadata - Owner: '{owner}', Type: '{wire_type}', Cable: '{cable_type}'")
-    
-    return {
-        'owner': owner,
-        'cable_type': cable_type,
-        'wire_type': wire_type,
-        'is_proposed': trace.get('proposed', False) if isinstance(trace, dict) else False
+    result = {
+        'owner': '',
+        'cable_type': '',
+        'is_proposed': False
     }
+    
+    # Extract from trace first (more reliable)
+    if trace:
+        # Owner from company field
+        if 'company' in trace:
+            result['owner'] = trace['company']
+        
+        # Cable type
+        if 'cable_type' in trace:
+            result['cable_type'] = trace['cable_type']
+            
+        # Check if proposed
+        result['is_proposed'] = trace.get('proposed', False) is True
+    
+    # Extract from wire as fallback
+    if not result['owner'] and '_company' in wire:
+        result['owner'] = wire['_company']
+    
+    if not result['cable_type'] and '_cable_type' in wire:
+        result['cable_type'] = wire['_cable_type']
+        
+    # Check additional proposed flag in wire
+    if not result['is_proposed'] and wire.get('_proposed', False):
+        result['is_proposed'] = True
+    
+    return result
 
 def classify_wire(trace_data):
     """
@@ -1794,3 +2055,381 @@ def classify_wire(trace_data):
         
     # Default fallback
     return "OTHER"
+
+def get_pole_sequence_from_spidacalc(spida_data):
+    """
+    Determine the authoritative order of poles for the entire job from SPIDAcalc data.
+    This sequence is essential for identifying backspans.
+    
+    Args:
+        spida_data (dict): SPIDAcalc JSON data
+        
+    Returns:
+        list: Ordered list of normalized pole IDs
+    """
+    pole_sequence = []
+    
+    if not spida_data:
+        print(f"[DEBUG] No SPIDAcalc data provided, cannot extract pole sequence")
+        return pole_sequence
+    
+    try:
+        # Poles are ordered in leads > locations array
+        for lead in spida_data.get('leads', []):
+            for location in lead.get('locations', []):
+                pole_label = location.get('label')
+                if pole_label:
+                    normalized_id = normalize_pole_id(pole_label)
+                    if normalized_id and normalized_id not in pole_sequence:
+                        pole_sequence.append(normalized_id)
+    except Exception as e:
+        print(f"[DEBUG] Error extracting pole sequence from SPIDAcalc: {str(e)}")
+    
+    print(f"[DEBUG] Extracted pole sequence from SPIDAcalc: {pole_sequence}")
+    return pole_sequence
+
+def get_direction_between_nodes(node1, node2):
+    """
+    Calculate cardinal direction from node1 to node2 based on coordinates.
+    
+    Args:
+        node1 (dict): Source node with latitude/longitude
+        node2 (dict): Target node with latitude/longitude
+        
+    Returns:
+        str: Cardinal direction ("North", "South", "East", "West", etc.)
+    """
+    if not node1 or not node2 or 'latitude' not in node1 or 'longitude' not in node1 or 'latitude' not in node2 or 'longitude' not in node2:
+        return "Unknown Direction"
+    
+    # Calculate direction from coordinates
+    lat_diff = node2.get('latitude', 0) - node1.get('latitude', 0)
+    lon_diff = node2.get('longitude', 0) - node1.get('longitude', 0)
+    
+    # Simple 8-direction calculation
+    if abs(lat_diff) > abs(lon_diff) * 2:
+        direction = "North" if lat_diff > 0 else "South"
+    elif abs(lon_diff) > abs(lat_diff) * 2:
+        direction = "East" if lon_diff > 0 else "West"
+    else:
+        # Diagonal directions
+        if lat_diff > 0 and lon_diff > 0:
+            direction = "North East"
+        elif lat_diff > 0 and lon_diff < 0:
+            direction = "North West"
+        elif lat_diff < 0 and lon_diff > 0:
+            direction = "South East"
+        else:  # lat_diff < 0 and lon_diff < 0
+            direction = "South West"
+    
+    return direction
+
+def get_attacher_from_wire(wire, trace, section_midspan_height_in=None):
+    """
+    Create an attacher dictionary from a wire and its trace data.
+    
+    Args:
+        wire (dict): Wire data from connection section photo
+        trace (dict): Trace data for the wire
+        section_midspan_height_in (str, optional): Midspan height from section data
+        
+    Returns:
+        dict: Attacher dictionary with standard fields
+    """
+    # Extract metadata
+    wire_meta = extract_wire_metadata(wire, trace)
+    owner = wire_meta['owner']
+    cable_type = wire_meta['cable_type']
+    is_proposed = wire_meta['is_proposed']
+    
+    # Create description
+    att_desc = f"{owner} {cable_type}".strip()
+    if not att_desc:
+        att_desc = "Unknown Attachment"
+    
+    # Extract heights
+    existing_height_inches = process_wire_height(wire)
+    existing_height_str = inches_to_feet_inches_str(existing_height_inches) if existing_height_inches is not None else "N/A"
+    
+    # Determine proposed height based on wire status
+    proposed_height_str = "N/A"
+    if is_proposed:  # New install on this span
+        existing_height_str = "N/A"  # New has no existing height on span
+        proposed_height_str = inches_to_feet_inches_str(existing_height_inches) if existing_height_inches is not None else "N/A"
+    
+    # Determine midspan value
+    midspan_val_str = "N/A"
+    raw_midspan_val_inches = None
+    
+    # Try section-level midspan height first
+    if section_midspan_height_in:
+        try:
+            raw_midspan_val_inches = float(section_midspan_height_in)
+            midspan_val_str = inches_to_feet_inches_str(raw_midspan_val_inches)
+        except (ValueError, TypeError):
+            print(f"[DEBUG] Could not parse section midspanHeight_in: {section_midspan_height_in}")
+    
+    # Try wire's own midspan height if available
+    wire_midspan_height = wire.get('_midspan_height')
+    if not raw_midspan_val_inches and wire_midspan_height:
+        try:
+            wire_midspan_height_float = float(wire_midspan_height)
+            midspan_val_str = inches_to_feet_inches_str(wire_midspan_height_float)
+            raw_midspan_val_inches = wire_midspan_height_float
+            print(f"[DEBUG] Using wire's own _midspan_height: {midspan_val_str}")
+        except (ValueError, TypeError):
+            print(f"[DEBUG] Could not parse wire _midspan_height: {wire_midspan_height}")
+    
+    # Check if wire is underground
+    goes_underground = False
+    if trace:
+        cable_type_str = trace.get('cable_type', '').lower() if trace.get('cable_type') else ''
+        goes_underground = ('underground' in cable_type_str or 
+                           cable_type_str == 'ug' or
+                           'riser' in cable_type_str or 
+                           'vertical' in cable_type_str)
+    
+    if goes_underground:
+        midspan_val_str = "UG"
+        print(f"[DEBUG] Wire {att_desc} marked as UG based on cable_type: {trace.get('cable_type', '')}")
+    
+    # Create final attacher dictionary
+    return {
+        'description': att_desc,
+        'existing_height': existing_height_str,
+        'proposed_height': proposed_height_str,
+        'midspan_proposed': midspan_val_str,
+        'raw_existing_height_inches': existing_height_inches,
+        'raw_proposed_height_inches': existing_height_inches if proposed_height_str != "N/A" else None,
+        'is_proposed': is_proposed
+    }
+
+def process_reference_span(katapult, current_node_id, other_node_id, conn_id, conn_data, is_backspan=False, previous_pole_id=None):
+    """
+    Process a reference span connection and generate a header and attachments.
+    
+    Args:
+        katapult (dict): The full Katapult JSON data
+        current_node_id (str): The node ID of the current pole
+        other_node_id (str): The node ID of the other end of the span
+        conn_id (str): The connection ID
+        conn_data (dict): The connection data
+        is_backspan (bool): Whether this is a backspan connection
+        previous_pole_id (str, optional): The previous pole ID if this is a backspan
+        
+    Returns:
+        tuple: (header_dict, attachments_list)
+    """
+    print(f"[DEBUG] Processing {'backspan' if is_backspan else 'reference'} connection {conn_id}")
+    
+    # Get pole tag for other node
+    other_pole_tag_raw = None
+    other_node_data = katapult.get('nodes', {}).get(other_node_id, {})
+    
+    # Try multiple paths for pole number in attributes
+    for attr_name in ['pl_number', 'PoleNumber', 'pole_tag', 'pole_id']:
+        attr = other_node_data.get('attributes', {}).get(attr_name)
+        if attr:
+            if isinstance(attr, dict):
+                for key in ['assessment', '-Imported', 'button_added', 'tagtext']:
+                    if key in attr:
+                        other_pole_tag_raw = attr.get(key)
+                        if other_pole_tag_raw:
+                            print(f"[DEBUG] Found other pole tag via attributes.{attr_name}.{key}: {other_pole_tag_raw}")
+                            break
+            elif isinstance(attr, str):
+                other_pole_tag_raw = attr
+                print(f"[DEBUG] Found other pole tag via direct attributes.{attr_name}: {other_pole_tag_raw}")
+            
+        if other_pole_tag_raw:
+            break
+    
+    # If pole number not found in attributes, use our helper function
+    if not other_pole_tag_raw:
+        # Check if this is a non-pole reference node (for service pole or similar)
+        node_type = other_node_data.get('attributes', {}).get('node_type', {})
+        if isinstance(node_type, dict):
+            node_type_value = next(iter(node_type.values()), None)
+        else:
+            node_type_value = node_type
+        
+        if node_type_value and str(node_type_value).lower() == 'reference':
+            # This is a reference node, not a standard pole
+            other_pole_tag_raw = "service pole"  # Default for reference nodes
+            
+            # Try to get a more specific name from attributes
+            for name_attr in ['name', 'label', 'scid', 'reference_name']:
+                name_value = other_node_data.get('attributes', {}).get(name_attr)
+                if name_value:
+                    if isinstance(name_value, dict):
+                        first_value = next(iter(name_value.values()), None)
+                        if first_value:
+                            other_pole_tag_raw = first_value
+                            print(f"[DEBUG] Using reference node name: {other_pole_tag_raw}")
+                            break
+                    else:
+                        other_pole_tag_raw = name_value
+                        print(f"[DEBUG] Using reference node name: {other_pole_tag_raw}")
+                        break
+        else:
+            # Try standard pole number lookup
+            other_pole_tag_raw = get_pole_number_from_node_id(katapult, other_node_id)
+            print(f"[DEBUG] Using get_pole_number_from_node_id for other pole: {other_pole_tag_raw}")
+
+    # Use the normalized previous pole ID for backspan if available
+    if is_backspan and previous_pole_id:
+        other_pole_tag_display = previous_pole_id
+    else:
+        other_pole_tag_display = other_pole_tag_raw if other_pole_tag_raw else f"UnknownPole({other_node_id})"
+    
+    print(f"[DEBUG] Other pole tag for header: {other_pole_tag_display}")
+
+    # Determine header text and style based on connection type
+    header_text = ""
+    header_style_hint = ""
+    
+    # Get direction
+    direction = "Unknown Direction"
+    connection_attributes = conn_data.get('attributes', {})
+    
+    # Try to extract direction from attributes
+    for direction_path in ['direction_tag', 'direction', 'span_direction', 'ref_direction']:
+        direction_attr = connection_attributes.get(direction_path)
+        if direction_attr:
+            print(f"[DEBUG] Found direction attribute: {direction_path} = {direction_attr}")
+            
+            # Handle if it's a dict with tagtext
+            if isinstance(direction_attr, dict):
+                for key in ['-Notes Added', 'button_added', 'assessment', '-Imported']:
+                    if key in direction_attr:
+                        direction_value = direction_attr[key]
+                        if isinstance(direction_value, dict) and 'tagtext' in direction_value:
+                            direction = direction_value['tagtext']
+                            print(f"[DEBUG] Direction from {direction_path}.{key}.tagtext: {direction}")
+                            break
+                        elif isinstance(direction_value, str):
+                            direction = direction_value
+                            print(f"[DEBUG] Direction from {direction_path}.{key}: {direction}")
+                            break
+            # Handle if it's a direct string
+            elif isinstance(direction_attr, str):
+                direction = direction_attr
+                print(f"[DEBUG] Direction directly from {direction_path}: {direction}")
+            
+            if direction != "Unknown Direction":
+                break
+    
+    # If backspan, override direction
+    if is_backspan:
+        direction = "Backspan"
+        header_style_hint = "light-blue"  # Use light blue for backspans
+    else:
+        # For regular reference spans, determine color
+        ref_color_hint = "orange"  # Default
+        
+        # Try multiple paths for color
+        for color_path in ['color_tag', 'color', 'span_color', 'ref_color']:
+            color_attr = connection_attributes.get(color_path)
+            if color_attr:
+                print(f"[DEBUG] Found color attribute: {color_path} = {color_attr}")
+                
+                # Extract color text using similar nested checking as with direction
+                color_text = None
+                if isinstance(color_attr, dict):
+                    for key in ['-Notes Added', 'button_added', 'assessment', '-Imported']:
+                        if key in color_attr:
+                            color_value = color_attr[key]
+                            if isinstance(color_value, dict) and 'tagtext' in color_value:
+                                color_text = color_value['tagtext'].lower()
+                                print(f"[DEBUG] Color from {color_path}.{key}.tagtext: {color_text}")
+                                break
+                            elif isinstance(color_value, str):
+                                color_text = color_value.lower()
+                                print(f"[DEBUG] Color from {color_path}.{key}: {color_text}")
+                                break
+                elif isinstance(color_attr, str):
+                    color_text = color_attr.lower()
+                    print(f"[DEBUG] Color directly from {color_path}: {color_text}")
+                
+                # Determine style hint based on color text
+                if color_text:
+                    if "orange" in color_text:
+                        ref_color_hint = "orange"
+                    elif "purple" in color_text:
+                        ref_color_hint = "purple"
+                    print(f"[DEBUG] Setting reference color to {ref_color_hint} based on '{color_text}'")
+                    break
+        
+        header_style_hint = ref_color_hint
+    
+    # Create header text
+    header_text = f"Ref ({direction}) to {other_pole_tag_display}"
+    
+    # Create header dictionary
+    header = {
+        'type': 'reference_header',
+        'description': header_text,
+        'style_hint': header_style_hint,
+        'existing_height': '',
+        'proposed_height': '',
+        'midspan_proposed': ''
+    }
+    
+    # Process attachments for this reference/backspan
+    print(f"[DEBUG] Processing connection sections for {header_text} from connection {conn_id}")
+    span_attachments = []
+    
+    # Extract attachments from connection sections
+    for section_id, section in conn_data.get('sections', {}).items():
+        print(f"[DEBUG] Processing section {section_id}")
+        
+        # Mid-span height for the section
+        section_midspan_height_in_str = section.get('midspanHeight_in')
+        print(f"[DEBUG] Section {section_id} midspanHeight_in: {section_midspan_height_in_str}")
+        
+        # Process photos in this section
+        for photo_id, photo_assoc in section.get('photos', {}).items():
+            print(f"[DEBUG] Processing photo {photo_id} in section {section_id}")
+            
+            # Get the full photo data
+            main_photo_data = katapult.get('photos', {}).get(photo_id, {})
+            photofirst_data = main_photo_data.get('photofirst_data', {})
+            
+            # Handle wire data as either list or dictionary
+            wire_items_data = photofirst_data.get('wire', [])
+            current_wire_items = []
+            
+            if isinstance(wire_items_data, dict):
+                current_wire_items = list(wire_items_data.values())
+            elif isinstance(wire_items_data, list):
+                current_wire_items = wire_items_data
+            
+            print(f"[DEBUG] Found {len(current_wire_items)} wire items in photo {photo_id}")
+            
+            # Process each wire
+            for wire in current_wire_items:
+                if not isinstance(wire, dict):
+                    continue
+                    
+                # Get trace ID and trace data
+                trace_id = wire.get('_trace', '').strip()
+                if not trace_id:
+                    continue
+                    
+                trace = get_trace_by_id(katapult, trace_id)
+                
+                # Create attacher dictionary for this wire
+                attacher = get_attacher_from_wire(wire, trace, section_midspan_height_in_str)
+                span_attachments.append(attacher)
+    
+    # Sort attachments by height (descending)
+    if span_attachments:
+        sorted_span_attachments = sorted(
+            span_attachments,
+            key=lambda x: (x.get('raw_existing_height_inches') or 0) if x.get('existing_height', 'N/A') != 'N/A' else 
+                          (x.get('raw_proposed_height_inches') or 0),
+            reverse=True
+        )
+        return header, sorted_span_attachments
+    
+    return header, []

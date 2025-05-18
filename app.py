@@ -5,6 +5,7 @@ import time
 import logging
 import traceback
 from werkzeug.utils import secure_filename
+from flask_session import Session  # Add import for Flask-Session
 from make_ready_processor import process_make_ready_report
 from excel_generator import create_make_ready_excel
 
@@ -16,9 +17,20 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Needed for flash messages
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+app.config['SESSION_TYPE'] = 'filesystem'  # Use filesystem-based sessions instead of cookies
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # Session lifetime in seconds (1 hour)
+app.config['SESSION_FILE_DIR'] = os.path.join(app.config['UPLOAD_FOLDER'], 'flask_session')
+
+# Initialize Flask-Session
+Session(app)
 
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+# Create a directory for temporary processed data
+TEMP_DATA_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'temp_data')
+os.makedirs(TEMP_DATA_DIR, exist_ok=True)
+# Create directory for Flask sessions
+os.makedirs(app.config['SESSION_FILE_DIR'], exist_ok=True)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'json'
@@ -114,13 +126,20 @@ def upload_file():
                 flash('No pole data found in the uploaded files.', 'warning')
                 return redirect(url_for('index'))
             
-            # Store processed data in session for Excel export
-            session['processed_poles'] = report_data
+            # Save processed data to a temporary file instead of storing it in the session
+            timestamp = int(time.time())
+            processed_data_path = os.path.join(TEMP_DATA_DIR, f"processed_data_{timestamp}.json")
+            with open(processed_data_path, 'w') as f:
+                json.dump(report_data, f)
+            
+            # Only store file paths and parameters in session (much smaller)
+            session['processed_data_path'] = processed_data_path
             session['katapult_path'] = katapult_path
             session['spidacalc_path'] = spidacalc_path
             session['target_poles'] = target_poles
             session['attachment_height_strategy'] = attachment_height_strategy
             session['pole_attribute_strategy'] = pole_attribute_strategy
+            session['timestamp'] = timestamp
                 
             # Extract geographic data for map display
             pole_geo_data = []
@@ -165,20 +184,39 @@ def upload_file():
 @app.route('/download_excel_report', methods=['GET'])
 def download_excel_report():
     try:
-        # Get processed data from session
-        processed_poles = session.get('processed_poles')
+        # Try to get the processed data path from session
+        processed_data_path = session.get('processed_data_path')
+        
+        processed_poles = None
+        if processed_data_path and os.path.exists(processed_data_path):
+            # Load processed data from the temporary file
+            try:
+                with open(processed_data_path, 'r') as f:
+                    processed_poles = json.load(f)
+            except Exception as e:
+                logger.error(f"Error loading processed data: {str(e)}")
+                # Will continue to try reprocessing
+        
+        # If no processed data available, try to reprocess
         if not processed_poles:
-            # If no data in session, try to reprocess using stored parameters
+            # Get parameters from session
             katapult_path = session.get('katapult_path')
             spidacalc_path = session.get('spidacalc_path')
             target_poles = session.get('target_poles')
             attachment_height_strategy = session.get('attachment_height_strategy')
             pole_attribute_strategy = session.get('pole_attribute_strategy')
             
+            # Check if the input files exist
             if not katapult_path or not os.path.exists(katapult_path):
-                flash('Please upload the files again.', 'warning')
+                flash('Please upload the files again. The original files are no longer available.', 'warning')
                 return redirect(url_for('index'))
             
+            # Check if SPIDAcalc path exists if it was provided
+            if spidacalc_path and not os.path.exists(spidacalc_path):
+                spidacalc_path = None
+                logger.warning("SPIDAcalc file no longer exists, proceeding with Katapult only")
+            
+            logger.info(f"Reprocessing data from: Katapult={katapult_path}, SPIDAcalc={spidacalc_path}")
             processed_poles = process_make_ready_report(
                 katapult_path, 
                 spidacalc_path, 
@@ -188,11 +226,11 @@ def download_excel_report():
             )
             
             if not processed_poles:
-                flash('No pole data found for export.', 'warning')
+                flash('No pole data found for export. Please try uploading the files again.', 'warning')
                 return redirect(url_for('index'))
         
         # Generate a timestamped filename
-        timestamp = int(time.time())
+        timestamp = session.get('timestamp', int(time.time()))
         excel_filename = f"make_ready_report_{timestamp}.xlsx"
         excel_path = os.path.join(app.config['UPLOAD_FOLDER'], excel_filename)
         
@@ -212,6 +250,21 @@ def download_excel_report():
         logger.error(traceback.format_exc())
         flash(f'Error generating Excel report: {str(e)}', 'danger')
         return redirect(url_for('index'))
+
+# Clean up temporary files periodically
+@app.before_request
+def cleanup_temp_files():
+    try:
+        # Clean up files older than 1 day
+        current_time = time.time()
+        for filename in os.listdir(TEMP_DATA_DIR):
+            file_path = os.path.join(TEMP_DATA_DIR, filename)
+            if os.path.isfile(file_path):
+                file_creation_time = os.path.getctime(file_path)
+                if current_time - file_creation_time > 86400:  # 24 hours in seconds
+                    os.remove(file_path)
+    except Exception as e:
+        logger.error(f"Error cleaning up temporary files: {str(e)}")
 
 if __name__ == '__main__':
     app.run(debug=True)

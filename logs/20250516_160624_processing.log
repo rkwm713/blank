@@ -1,0 +1,417 @@
+2025-05-16 16:06:24,600 - processing - INFO - Processing attachments below neutral for pole PL370858
+2025-05-16 16:06:24,605 - processing - INFO - 
+==================================================
+2025-05-16 16:06:24,606 - processing - INFO - POLE SUMMARY: PL370858
+2025-05-16 16:06:24,606 - processing - INFO - ==================================================
+2025-05-16 16:06:24,607 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:06:24,607 - processing - INFO -   1. CPS Energy  at height 318.0001717200001 inches (source: spidacalc)
+2025-05-16 16:06:24,608 - processing - INFO -   2. CPS Energy  at height 318.0001717200001 inches (source: spidacalc)
+2025-05-16 16:06:24,608 - processing - INFO - Highest neutral: CPS Energy  at height 318.0001717200001 inches
+2025-05-16 16:06:24,609 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:24,609 - processing - INFO - ==================================================
+2025-05-16 16:06:24,666 - processing - INFO - Processing attachments below neutral for pole PL379971
+2025-05-16 16:06:24,667 - processing - INFO - 
+==================================================
+2025-05-16 16:06:24,667 - processing - INFO - POLE SUMMARY: PL379971
+2025-05-16 16:06:24,667 - processing - INFO - ==================================================
+2025-05-16 16:06:24,668 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:06:24,668 - processing - INFO - No neutral wires found!
+2025-05-16 16:06:24,668 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:24,668 - processing - INFO - ==================================================
+2025-05-16 16:06:24,703 - processing - INFO - Processing attachments below neutral for pole PL379966
+2025-05-16 16:06:24,703 - processing - INFO - 
+==================================================
+2025-05-16 16:06:24,704 - processing - INFO - POLE SUMMARY: PL379966
+2025-05-16 16:06:24,704 - processing - INFO - ==================================================
+2025-05-16 16:06:24,704 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:06:24,704 - processing - INFO - No neutral wires found!
+2025-05-16 16:06:24,705 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:24,705 - processing - INFO - ==================================================
+2025-05-16 16:06:24,772 - processing - INFO - Processing attachments below neutral for pole PL373937
+2025-05-16 16:06:24,773 - processing - INFO - 
+==================================================
+2025-05-16 16:06:24,774 - processing - INFO - POLE SUMMARY: PL373937
+2025-05-16 16:06:24,774 - processing - INFO - ==================================================
+2025-05-16 16:06:24,775 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:06:24,775 - processing - INFO - No neutral wires found!
+2025-05-16 16:06:24,775 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:24,775 - processing - INFO - ==================================================
+2025-05-16 16:06:24,860 - processing - INFO - Processing attachments below neutral for pole PL404475
+2025-05-16 16:06:24,860 - processing - INFO - 
+==================================================
+2025-05-16 16:06:24,861 - processing - INFO - POLE SUMMARY: PL404475
+2025-05-16 16:06:24,861 - processing - INFO - ==================================================
+2025-05-16 16:06:24,861 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:06:24,861 - processing - INFO - No neutral wires found!
+2025-05-16 16:06:24,862 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:24,862 - processing - INFO - ==================================================
+2025-05-16 16:06:24,904 - processing - INFO - Processing attachments below neutral for pole PL373935
+2025-05-16 16:06:24,905 - processing - INFO - 
+==================================================
+2025-05-16 16:06:24,905 - processing - INFO - POLE SUMMARY: PL373935
+2025-05-16 16:06:24,905 - processing - INFO - ==================================================
+2025-05-16 16:06:24,906 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:06:24,906 - processing - INFO - No neutral wires found!
+2025-05-16 16:06:24,906 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:24,907 - processing - INFO - ==================================================
+2025-05-16 16:06:24,944 - processing - INFO - Processing attachments below neutral for pole PL398490
+2025-05-16 16:06:24,945 - processing - INFO - 
+==================================================
+2025-05-16 16:06:24,945 - processing - INFO - POLE SUMMARY: PL398490
+2025-05-16 16:06:24,946 - processing - INFO - ==================================================
+2025-05-16 16:06:24,946 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:06:24,946 - processing - INFO - No neutral wires found!
+2025-05-16 16:06:24,947 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:24,947 - processing - INFO - ==================================================
+2025-05-16 16:06:25,002 - processing - INFO - Processing attachments below neutral for pole PL900997
+2025-05-16 16:06:25,007 - processing - INFO - 
+==================================================
+2025-05-16 16:06:25,008 - processing - INFO - POLE SUMMARY: PL900997
+2025-05-16 16:06:25,008 - processing - INFO - ==================================================
+2025-05-16 16:06:25,008 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:06:25,008 - processing - INFO -   1. CPS Energy  at height 325.0001755 inches (source: spidacalc)
+2025-05-16 16:06:25,009 - processing - INFO -   2. CPS Energy  at height 325.0001755 inches (source: spidacalc)
+2025-05-16 16:06:25,010 - processing - INFO - Highest neutral: CPS Energy  at height 325.0001755 inches
+2025-05-16 16:06:25,010 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:25,010 - processing - INFO - ==================================================
+2025-05-16 16:06:25,075 - processing - INFO - Processing attachments below neutral for pole PL404474
+2025-05-16 16:06:25,079 - processing - INFO - 
+==================================================
+2025-05-16 16:06:25,079 - processing - INFO - POLE SUMMARY: PL404474
+2025-05-16 16:06:25,080 - processing - INFO - ==================================================
+2025-05-16 16:06:25,080 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:06:25,080 - processing - INFO -   1. CPS Energy  at height 312.00016848000007 inches (source: spidacalc)
+2025-05-16 16:06:25,080 - processing - INFO -   2. CPS Energy  at height 312.00016848000007 inches (source: spidacalc)
+2025-05-16 16:06:25,081 - processing - INFO - Highest neutral: CPS Energy  at height 312.00016848000007 inches
+2025-05-16 16:06:25,081 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:25,081 - processing - INFO - ==================================================
+2025-05-16 16:06:25,125 - processing - INFO - Processing attachments below neutral for pole PL401451
+2025-05-16 16:06:25,126 - processing - INFO - 
+==================================================
+2025-05-16 16:06:25,126 - processing - INFO - POLE SUMMARY: PL401451
+2025-05-16 16:06:25,126 - processing - INFO - ==================================================
+2025-05-16 16:06:25,126 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:06:25,127 - processing - INFO - No neutral wires found!
+2025-05-16 16:06:25,127 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:25,127 - processing - INFO - ==================================================
+2025-05-16 16:06:25,201 - processing - INFO - Processing attachments below neutral for pole PL398491
+2025-05-16 16:06:25,205 - processing - INFO - 
+==================================================
+2025-05-16 16:06:25,205 - processing - INFO - POLE SUMMARY: PL398491
+2025-05-16 16:06:25,206 - processing - INFO - ==================================================
+2025-05-16 16:06:25,206 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:06:25,206 - processing - INFO -   1. CPS Energy  at height 324.00017496000004 inches (source: spidacalc)
+2025-05-16 16:06:25,207 - processing - INFO -   2. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:06:25,207 - processing - INFO - Highest neutral: CPS Energy  at height 327.0001765800001 inches
+2025-05-16 16:06:25,207 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:25,208 - processing - INFO - ==================================================
+2025-05-16 16:06:25,309 - processing - INFO - Processing attachments below neutral for pole PL410620
+2025-05-16 16:06:25,312 - processing - INFO - 
+==================================================
+2025-05-16 16:06:25,312 - processing - INFO - POLE SUMMARY: PL410620
+2025-05-16 16:06:25,313 - processing - INFO - ==================================================
+2025-05-16 16:06:25,313 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:06:25,314 - processing - INFO -   1. CPS Energy  at height 354.0001911600001 inches (source: spidacalc)
+2025-05-16 16:06:25,314 - processing - INFO -   2. CPS Energy  at height 354.0001911600001 inches (source: spidacalc)
+2025-05-16 16:06:25,315 - processing - INFO - Highest neutral: CPS Energy  at height 354.0001911600001 inches
+2025-05-16 16:06:25,315 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:25,315 - processing - INFO - ==================================================
+2025-05-16 16:06:25,341 - processing - INFO - Processing attachments below neutral for pole {'-Imported': 'PL410595'}
+2025-05-16 16:06:25,341 - processing - INFO - 
+==================================================
+2025-05-16 16:06:25,342 - processing - INFO - POLE SUMMARY: {'-Imported': 'PL410595'}
+2025-05-16 16:06:25,342 - processing - INFO - ==================================================
+2025-05-16 16:06:25,342 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:06:25,343 - processing - INFO - No neutral wires found!
+2025-05-16 16:06:25,343 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:25,343 - processing - INFO - ==================================================
+2025-05-16 16:06:25,386 - processing - INFO - Processing attachments below neutral for pole PL389359
+2025-05-16 16:06:25,389 - processing - INFO - 
+==================================================
+2025-05-16 16:06:25,389 - processing - INFO - POLE SUMMARY: PL389359
+2025-05-16 16:06:25,389 - processing - INFO - ==================================================
+2025-05-16 16:06:25,390 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:06:25,390 - processing - INFO -   1. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:06:25,390 - processing - INFO -   2. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:06:25,390 - processing - INFO -   3. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:06:25,391 - processing - INFO - Highest neutral: CPS Energy  at height 327.0001765800001 inches
+2025-05-16 16:06:25,391 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:06:25,391 - processing - INFO - ==================================================
+2025-05-16 16:07:09,249 - processing - INFO - Processing attachments below neutral for pole PL370858
+2025-05-16 16:07:09,253 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,254 - processing - INFO - POLE SUMMARY: PL370858
+2025-05-16 16:07:09,254 - processing - INFO - ==================================================
+2025-05-16 16:07:09,255 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:07:09,255 - processing - INFO -   1. CPS Energy  at height 318.0001717200001 inches (source: spidacalc)
+2025-05-16 16:07:09,256 - processing - INFO -   2. CPS Energy  at height 318.0001717200001 inches (source: spidacalc)
+2025-05-16 16:07:09,256 - processing - INFO - Highest neutral: CPS Energy  at height 318.0001717200001 inches
+2025-05-16 16:07:09,256 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,257 - processing - INFO - ==================================================
+2025-05-16 16:07:09,319 - processing - INFO - Processing attachments below neutral for pole PL379971
+2025-05-16 16:07:09,320 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,320 - processing - INFO - POLE SUMMARY: PL379971
+2025-05-16 16:07:09,321 - processing - INFO - ==================================================
+2025-05-16 16:07:09,321 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:09,321 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:09,322 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,322 - processing - INFO - ==================================================
+2025-05-16 16:07:09,365 - processing - INFO - Processing attachments below neutral for pole PL379966
+2025-05-16 16:07:09,366 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,366 - processing - INFO - POLE SUMMARY: PL379966
+2025-05-16 16:07:09,366 - processing - INFO - ==================================================
+2025-05-16 16:07:09,367 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:09,367 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:09,367 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,368 - processing - INFO - ==================================================
+2025-05-16 16:07:09,445 - processing - INFO - Processing attachments below neutral for pole PL373937
+2025-05-16 16:07:09,446 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,446 - processing - INFO - POLE SUMMARY: PL373937
+2025-05-16 16:07:09,447 - processing - INFO - ==================================================
+2025-05-16 16:07:09,447 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:09,447 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:09,448 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,448 - processing - INFO - ==================================================
+2025-05-16 16:07:09,544 - processing - INFO - Processing attachments below neutral for pole PL404475
+2025-05-16 16:07:09,545 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,545 - processing - INFO - POLE SUMMARY: PL404475
+2025-05-16 16:07:09,546 - processing - INFO - ==================================================
+2025-05-16 16:07:09,546 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:09,546 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:09,547 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,547 - processing - INFO - ==================================================
+2025-05-16 16:07:09,592 - processing - INFO - Processing attachments below neutral for pole PL373935
+2025-05-16 16:07:09,593 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,593 - processing - INFO - POLE SUMMARY: PL373935
+2025-05-16 16:07:09,594 - processing - INFO - ==================================================
+2025-05-16 16:07:09,594 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:09,594 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:09,595 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,595 - processing - INFO - ==================================================
+2025-05-16 16:07:09,639 - processing - INFO - Processing attachments below neutral for pole PL398490
+2025-05-16 16:07:09,640 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,640 - processing - INFO - POLE SUMMARY: PL398490
+2025-05-16 16:07:09,641 - processing - INFO - ==================================================
+2025-05-16 16:07:09,641 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:09,641 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:09,642 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,642 - processing - INFO - ==================================================
+2025-05-16 16:07:09,704 - processing - INFO - Processing attachments below neutral for pole PL900997
+2025-05-16 16:07:09,710 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,710 - processing - INFO - POLE SUMMARY: PL900997
+2025-05-16 16:07:09,711 - processing - INFO - ==================================================
+2025-05-16 16:07:09,711 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:07:09,711 - processing - INFO -   1. CPS Energy  at height 325.0001755 inches (source: spidacalc)
+2025-05-16 16:07:09,712 - processing - INFO -   2. CPS Energy  at height 325.0001755 inches (source: spidacalc)
+2025-05-16 16:07:09,712 - processing - INFO - Highest neutral: CPS Energy  at height 325.0001755 inches
+2025-05-16 16:07:09,713 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,713 - processing - INFO - ==================================================
+2025-05-16 16:07:09,787 - processing - INFO - Processing attachments below neutral for pole PL404474
+2025-05-16 16:07:09,792 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,793 - processing - INFO - POLE SUMMARY: PL404474
+2025-05-16 16:07:09,793 - processing - INFO - ==================================================
+2025-05-16 16:07:09,793 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:07:09,794 - processing - INFO -   1. CPS Energy  at height 312.00016848000007 inches (source: spidacalc)
+2025-05-16 16:07:09,794 - processing - INFO -   2. CPS Energy  at height 312.00016848000007 inches (source: spidacalc)
+2025-05-16 16:07:09,795 - processing - INFO - Highest neutral: CPS Energy  at height 312.00016848000007 inches
+2025-05-16 16:07:09,795 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,795 - processing - INFO - ==================================================
+2025-05-16 16:07:09,852 - processing - INFO - Processing attachments below neutral for pole PL401451
+2025-05-16 16:07:09,853 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,853 - processing - INFO - POLE SUMMARY: PL401451
+2025-05-16 16:07:09,853 - processing - INFO - ==================================================
+2025-05-16 16:07:09,854 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:09,854 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:09,854 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,854 - processing - INFO - ==================================================
+2025-05-16 16:07:09,943 - processing - INFO - Processing attachments below neutral for pole PL398491
+2025-05-16 16:07:09,949 - processing - INFO - 
+==================================================
+2025-05-16 16:07:09,949 - processing - INFO - POLE SUMMARY: PL398491
+2025-05-16 16:07:09,949 - processing - INFO - ==================================================
+2025-05-16 16:07:09,950 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:07:09,950 - processing - INFO -   1. CPS Energy  at height 324.00017496000004 inches (source: spidacalc)
+2025-05-16 16:07:09,951 - processing - INFO -   2. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:07:09,951 - processing - INFO - Highest neutral: CPS Energy  at height 327.0001765800001 inches
+2025-05-16 16:07:09,951 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:09,952 - processing - INFO - ==================================================
+2025-05-16 16:07:10,065 - processing - INFO - Processing attachments below neutral for pole PL410620
+2025-05-16 16:07:10,068 - processing - INFO - 
+==================================================
+2025-05-16 16:07:10,068 - processing - INFO - POLE SUMMARY: PL410620
+2025-05-16 16:07:10,069 - processing - INFO - ==================================================
+2025-05-16 16:07:10,069 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:07:10,069 - processing - INFO -   1. CPS Energy  at height 354.0001911600001 inches (source: spidacalc)
+2025-05-16 16:07:10,069 - processing - INFO -   2. CPS Energy  at height 354.0001911600001 inches (source: spidacalc)
+2025-05-16 16:07:10,070 - processing - INFO - Highest neutral: CPS Energy  at height 354.0001911600001 inches
+2025-05-16 16:07:10,070 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:10,070 - processing - INFO - ==================================================
+2025-05-16 16:07:10,104 - processing - INFO - Processing attachments below neutral for pole {'-Imported': 'PL410595'}
+2025-05-16 16:07:10,105 - processing - INFO - 
+==================================================
+2025-05-16 16:07:10,105 - processing - INFO - POLE SUMMARY: {'-Imported': 'PL410595'}
+2025-05-16 16:07:10,106 - processing - INFO - ==================================================
+2025-05-16 16:07:10,106 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:10,106 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:10,107 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:10,107 - processing - INFO - ==================================================
+2025-05-16 16:07:10,156 - processing - INFO - Processing attachments below neutral for pole PL389359
+2025-05-16 16:07:10,160 - processing - INFO - 
+==================================================
+2025-05-16 16:07:10,160 - processing - INFO - POLE SUMMARY: PL389359
+2025-05-16 16:07:10,161 - processing - INFO - ==================================================
+2025-05-16 16:07:10,161 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:07:10,161 - processing - INFO -   1. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:07:10,162 - processing - INFO -   2. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:07:10,162 - processing - INFO -   3. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:07:10,163 - processing - INFO - Highest neutral: CPS Energy  at height 327.0001765800001 inches
+2025-05-16 16:07:10,163 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:10,163 - processing - INFO - ==================================================
+2025-05-16 16:07:40,362 - processing - INFO - Processing attachments below neutral for pole PL370858
+2025-05-16 16:07:40,366 - processing - INFO - 
+==================================================
+2025-05-16 16:07:40,366 - processing - INFO - POLE SUMMARY: PL370858
+2025-05-16 16:07:40,366 - processing - INFO - ==================================================
+2025-05-16 16:07:40,367 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:07:40,367 - processing - INFO -   1. CPS Energy  at height 318.0001717200001 inches (source: spidacalc)
+2025-05-16 16:07:40,367 - processing - INFO -   2. CPS Energy  at height 318.0001717200001 inches (source: spidacalc)
+2025-05-16 16:07:40,368 - processing - INFO - Highest neutral: CPS Energy  at height 318.0001717200001 inches
+2025-05-16 16:07:40,368 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:40,368 - processing - INFO - ==================================================
+2025-05-16 16:07:40,429 - processing - INFO - Processing attachments below neutral for pole PL379971
+2025-05-16 16:07:40,430 - processing - INFO - 
+==================================================
+2025-05-16 16:07:40,430 - processing - INFO - POLE SUMMARY: PL379971
+2025-05-16 16:07:40,431 - processing - INFO - ==================================================
+2025-05-16 16:07:40,431 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:40,432 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:40,432 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:40,432 - processing - INFO - ==================================================
+2025-05-16 16:07:40,472 - processing - INFO - Processing attachments below neutral for pole PL379966
+2025-05-16 16:07:40,473 - processing - INFO - 
+==================================================
+2025-05-16 16:07:40,473 - processing - INFO - POLE SUMMARY: PL379966
+2025-05-16 16:07:40,474 - processing - INFO - ==================================================
+2025-05-16 16:07:40,474 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:40,475 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:40,475 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:40,475 - processing - INFO - ==================================================
+2025-05-16 16:07:40,549 - processing - INFO - Processing attachments below neutral for pole PL373937
+2025-05-16 16:07:40,549 - processing - INFO - 
+==================================================
+2025-05-16 16:07:40,550 - processing - INFO - POLE SUMMARY: PL373937
+2025-05-16 16:07:40,550 - processing - INFO - ==================================================
+2025-05-16 16:07:40,550 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:40,551 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:40,551 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:40,551 - processing - INFO - ==================================================
+2025-05-16 16:07:40,638 - processing - INFO - Processing attachments below neutral for pole PL404475
+2025-05-16 16:07:40,639 - processing - INFO - 
+==================================================
+2025-05-16 16:07:40,639 - processing - INFO - POLE SUMMARY: PL404475
+2025-05-16 16:07:40,639 - processing - INFO - ==================================================
+2025-05-16 16:07:40,640 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:40,640 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:40,640 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:40,640 - processing - INFO - ==================================================
+2025-05-16 16:07:40,688 - processing - INFO - Processing attachments below neutral for pole PL373935
+2025-05-16 16:07:40,688 - processing - INFO - 
+==================================================
+2025-05-16 16:07:40,689 - processing - INFO - POLE SUMMARY: PL373935
+2025-05-16 16:07:40,689 - processing - INFO - ==================================================
+2025-05-16 16:07:40,689 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:40,689 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:40,690 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:40,690 - processing - INFO - ==================================================
+2025-05-16 16:07:40,729 - processing - INFO - Processing attachments below neutral for pole PL398490
+2025-05-16 16:07:40,730 - processing - INFO - 
+==================================================
+2025-05-16 16:07:40,730 - processing - INFO - POLE SUMMARY: PL398490
+2025-05-16 16:07:40,730 - processing - INFO - ==================================================
+2025-05-16 16:07:40,731 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:40,731 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:40,731 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:40,731 - processing - INFO - ==================================================
+2025-05-16 16:07:40,796 - processing - INFO - Processing attachments below neutral for pole PL900997
+2025-05-16 16:07:40,801 - processing - INFO - 
+==================================================
+2025-05-16 16:07:40,802 - processing - INFO - POLE SUMMARY: PL900997
+2025-05-16 16:07:40,802 - processing - INFO - ==================================================
+2025-05-16 16:07:40,802 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:07:40,803 - processing - INFO -   1. CPS Energy  at height 325.0001755 inches (source: spidacalc)
+2025-05-16 16:07:40,803 - processing - INFO -   2. CPS Energy  at height 325.0001755 inches (source: spidacalc)
+2025-05-16 16:07:40,804 - processing - INFO - Highest neutral: CPS Energy  at height 325.0001755 inches
+2025-05-16 16:07:40,804 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:40,804 - processing - INFO - ==================================================
+2025-05-16 16:07:40,885 - processing - INFO - Processing attachments below neutral for pole PL404474
+2025-05-16 16:07:40,889 - processing - INFO - 
+==================================================
+2025-05-16 16:07:40,890 - processing - INFO - POLE SUMMARY: PL404474
+2025-05-16 16:07:40,890 - processing - INFO - ==================================================
+2025-05-16 16:07:40,891 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:07:40,891 - processing - INFO -   1. CPS Energy  at height 312.00016848000007 inches (source: spidacalc)
+2025-05-16 16:07:40,892 - processing - INFO -   2. CPS Energy  at height 312.00016848000007 inches (source: spidacalc)
+2025-05-16 16:07:40,892 - processing - INFO - Highest neutral: CPS Energy  at height 312.00016848000007 inches
+2025-05-16 16:07:40,892 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:40,893 - processing - INFO - ==================================================
+2025-05-16 16:07:40,949 - processing - INFO - Processing attachments below neutral for pole PL401451
+2025-05-16 16:07:40,950 - processing - INFO - 
+==================================================
+2025-05-16 16:07:40,950 - processing - INFO - POLE SUMMARY: PL401451
+2025-05-16 16:07:40,951 - processing - INFO - ==================================================
+2025-05-16 16:07:40,951 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:40,951 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:40,952 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:40,952 - processing - INFO - ==================================================
+2025-05-16 16:07:41,041 - processing - INFO - Processing attachments below neutral for pole PL398491
+2025-05-16 16:07:41,046 - processing - INFO - 
+==================================================
+2025-05-16 16:07:41,047 - processing - INFO - POLE SUMMARY: PL398491
+2025-05-16 16:07:41,047 - processing - INFO - ==================================================
+2025-05-16 16:07:41,047 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:07:41,048 - processing - INFO -   1. CPS Energy  at height 324.00017496000004 inches (source: spidacalc)
+2025-05-16 16:07:41,048 - processing - INFO -   2. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:07:41,048 - processing - INFO - Highest neutral: CPS Energy  at height 327.0001765800001 inches
+2025-05-16 16:07:41,049 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:41,049 - processing - INFO - ==================================================
+2025-05-16 16:07:41,166 - processing - INFO - Processing attachments below neutral for pole PL410620
+2025-05-16 16:07:41,170 - processing - INFO - 
+==================================================
+2025-05-16 16:07:41,171 - processing - INFO - POLE SUMMARY: PL410620
+2025-05-16 16:07:41,171 - processing - INFO - ==================================================
+2025-05-16 16:07:41,172 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:07:41,172 - processing - INFO -   1. CPS Energy  at height 354.0001911600001 inches (source: spidacalc)
+2025-05-16 16:07:41,173 - processing - INFO -   2. CPS Energy  at height 354.0001911600001 inches (source: spidacalc)
+2025-05-16 16:07:41,173 - processing - INFO - Highest neutral: CPS Energy  at height 354.0001911600001 inches
+2025-05-16 16:07:41,174 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:41,174 - processing - INFO - ==================================================
+2025-05-16 16:07:41,206 - processing - INFO - Processing attachments below neutral for pole {'-Imported': 'PL410595'}
+2025-05-16 16:07:41,206 - processing - INFO - 
+==================================================
+2025-05-16 16:07:41,207 - processing - INFO - POLE SUMMARY: {'-Imported': 'PL410595'}
+2025-05-16 16:07:41,207 - processing - INFO - ==================================================
+2025-05-16 16:07:41,207 - processing - INFO - Found 0 neutral wire(s):
+2025-05-16 16:07:41,208 - processing - INFO - No neutral wires found!
+2025-05-16 16:07:41,208 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:41,208 - processing - INFO - ==================================================
+2025-05-16 16:07:41,254 - processing - INFO - Processing attachments below neutral for pole PL389359
+2025-05-16 16:07:41,258 - processing - INFO - 
+==================================================
+2025-05-16 16:07:41,258 - processing - INFO - POLE SUMMARY: PL389359
+2025-05-16 16:07:41,259 - processing - INFO - ==================================================
+2025-05-16 16:07:41,259 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:07:41,259 - processing - INFO -   1. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:07:41,260 - processing - INFO -   2. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:07:41,260 - processing - INFO -   3. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:07:41,261 - processing - INFO - Highest neutral: CPS Energy  at height 327.0001765800001 inches
+2025-05-16 16:07:41,261 - processing - INFO - Found 0 attachment(s) below neutral:
+2025-05-16 16:07:41,262 - processing - INFO - ==================================================

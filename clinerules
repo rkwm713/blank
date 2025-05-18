@@ -1,0 +1,8 @@
+<script>start("c:\\Users\\TechServ\\Desktop\\blank\\.clinerules\\");</script>
+<script>onHasParentDirectory();</script>
+<script>addRow("01-preprocessing","01-preprocessing",0,463,"463 B",1747398863,"5/16/25, 7:34:23 AM");</script>
+<script>addRow("02-conflict-resolution.md","02-conflict-resolution.md",0,923,"923 B",1747398863,"5/16/25, 7:34:23 AM");</script>
+<script>addRow("03-map-integration.md","03-map-integration.md",0,936,"936 B",1747398863,"5/16/25, 7:34:23 AM");</script>
+<script>addRow("04-current-task.md","04-current-task.md",0,2807,"2.7 kB",1747398863,"5/16/25, 7:34:23 AM");</script>
+<script>addRow("README.md","README.md",0,789,"789 B",1747398863,"5/16/25, 7:34:23 AM");</script>
+<script>addRow("work-flow.md","work-flow.md",0,3620,"3.5 kB",1747398863,"5/16/25, 7:34:23 AM");</script>

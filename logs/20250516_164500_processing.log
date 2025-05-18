@@ -1,0 +1,448 @@
+2025-05-16 16:45:00,673 - processing - INFO - Processing attachments below neutral for pole PL370858
+2025-05-16 16:45:00,677 - processing - INFO - 
+==================================================
+2025-05-16 16:45:00,678 - processing - INFO - POLE SUMMARY: PL370858
+2025-05-16 16:45:00,678 - processing - INFO - ==================================================
+2025-05-16 16:45:00,679 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:45:00,679 - processing - INFO -   1. CPS ENERGY Neutral at height 317.6 inches (source: katapult)
+2025-05-16 16:45:00,679 - processing - INFO -   2. CPS Energy  at height 318.0001717200001 inches (source: spidacalc)
+2025-05-16 16:45:00,681 - processing - INFO -   3. CPS Energy  at height 318.0001717200001 inches (source: spidacalc)
+2025-05-16 16:45:00,681 - processing - INFO - Highest neutral: CPS Energy  at height 318.0001717200001 inches
+2025-05-16 16:45:00,682 - processing - INFO - Found 5 attachment(s) below neutral:
+2025-05-16 16:45:00,682 - processing - INFO -   1. CPS ENERGY Neutral at height 26'-6"
+2025-05-16 16:45:00,682 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 25'-5"
+2025-05-16 16:45:00,682 - processing - INFO -   3. AT&T Fiber Optic Com at height 22'-10"
+2025-05-16 16:45:00,683 - processing - INFO -   4. AT&T Telco Com at height 21'-10"
+2025-05-16 16:45:00,684 - processing - INFO -   5. Charter Fiber Optic Com at height 22'-1"
+2025-05-16 16:45:00,685 - processing - INFO - ==================================================
+2025-05-16 16:45:00,747 - processing - INFO - Processing attachments below neutral for pole PL379971
+2025-05-16 16:45:00,750 - processing - INFO - 
+==================================================
+2025-05-16 16:45:00,750 - processing - INFO - POLE SUMMARY: PL379971
+2025-05-16 16:45:00,750 - processing - INFO - ==================================================
+2025-05-16 16:45:00,751 - processing - INFO - Found 1 neutral wire(s):
+2025-05-16 16:45:00,751 - processing - INFO -   1. CPS ENERGY Neutral at height 316.48 inches (source: katapult)
+2025-05-16 16:45:00,751 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 316.48 inches
+2025-05-16 16:45:00,752 - processing - INFO - Found 4 attachment(s) below neutral:
+2025-05-16 16:45:00,752 - processing - INFO -   1. CPS ENERGY Neutral at height 26'-4"
+2025-05-16 16:45:00,752 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 24'-9"
+2025-05-16 16:45:00,753 - processing - INFO -   3. AT&T Fiber Optic Com at height 23'-9"
+2025-05-16 16:45:00,753 - processing - INFO -   4. AT&T Telco Com at height 22'-9"
+2025-05-16 16:45:00,753 - processing - INFO - ==================================================
+2025-05-16 16:45:00,792 - processing - INFO - Processing attachments below neutral for pole PL379966
+2025-05-16 16:45:00,796 - processing - INFO - 
+==================================================
+2025-05-16 16:45:00,796 - processing - INFO - POLE SUMMARY: PL379966
+2025-05-16 16:45:00,796 - processing - INFO - ==================================================
+2025-05-16 16:45:00,797 - processing - INFO - Found 1 neutral wire(s):
+2025-05-16 16:45:00,797 - processing - INFO -   1. CPS ENERGY Neutral at height 330.61 inches (source: katapult)
+2025-05-16 16:45:00,797 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 330.61 inches
+2025-05-16 16:45:00,797 - processing - INFO - Found 4 attachment(s) below neutral:
+2025-05-16 16:45:00,798 - processing - INFO -   1. CPS ENERGY Neutral at height 27'-7"
+2025-05-16 16:45:00,798 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 26'-4"
+2025-05-16 16:45:00,798 - processing - INFO -   3. AT&T Fiber Optic Com at height 23'-7"
+2025-05-16 16:45:00,798 - processing - INFO -   4. AT&T Telco Com at height 22'-7"
+2025-05-16 16:45:00,799 - processing - INFO - ==================================================
+2025-05-16 16:45:00,868 - processing - INFO - Processing attachments below neutral for pole PL373937
+2025-05-16 16:45:00,871 - processing - INFO - 
+==================================================
+2025-05-16 16:45:00,872 - processing - INFO - POLE SUMMARY: PL373937
+2025-05-16 16:45:00,872 - processing - INFO - ==================================================
+2025-05-16 16:45:00,873 - processing - INFO - Found 1 neutral wire(s):
+2025-05-16 16:45:00,873 - processing - INFO -   1. CPS ENERGY Neutral at height 463.93 inches (source: katapult)
+2025-05-16 16:45:00,873 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 463.93 inches
+2025-05-16 16:45:00,874 - processing - INFO - Found 5 attachment(s) below neutral:
+2025-05-16 16:45:00,874 - processing - INFO -   1. CPS ENERGY Neutral at height 38'-8"
+2025-05-16 16:45:00,875 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 36'-8"
+2025-05-16 16:45:00,875 - processing - INFO -   3. AT&T Fiber Optic Com at height 32'-8"
+2025-05-16 16:45:00,875 - processing - INFO -   4. AT&T Telco Com at height 27'-6"
+2025-05-16 16:45:00,875 - processing - INFO -   5. CPS ENERGY Supply Fiber at height 36'-5"
+2025-05-16 16:45:00,876 - processing - INFO - ==================================================
+2025-05-16 16:45:00,960 - processing - INFO - Processing attachments below neutral for pole PL404475
+2025-05-16 16:45:00,964 - processing - INFO - 
+==================================================
+2025-05-16 16:45:00,965 - processing - INFO - POLE SUMMARY: PL404475
+2025-05-16 16:45:00,965 - processing - INFO - ==================================================
+2025-05-16 16:45:00,966 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:45:00,966 - processing - INFO -   1. CPS ENERGY Neutral at height 463.45 inches (source: katapult)
+2025-05-16 16:45:00,967 - processing - INFO -   2. CPS ENERGY Neutral at height 432.76 inches (source: katapult)
+2025-05-16 16:45:00,967 - processing - INFO -   3. CPS ENERGY Neutral at height 432.92 inches (source: katapult)
+2025-05-16 16:45:00,967 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 463.45 inches
+2025-05-16 16:45:00,967 - processing - INFO - Found 7 attachment(s) below neutral:
+2025-05-16 16:45:00,968 - processing - INFO -   1. CPS ENERGY Neutral at height 38'-7"
+2025-05-16 16:45:00,968 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 37'-1"
+2025-05-16 16:45:00,968 - processing - INFO -   3. AT&T Fiber Optic Com at height 31'-5"
+2025-05-16 16:45:00,968 - processing - INFO -   4. AT&T Telco Com at height 21'-1"
+2025-05-16 16:45:00,969 - processing - INFO -   5. CPS ENERGY Neutral at height 36'-1"
+2025-05-16 16:45:00,969 - processing - INFO -   6. CPS ENERGY Neutral at height 36'-1"
+2025-05-16 16:45:00,970 - processing - INFO -   7. CPS ENERGY Supply Fiber at height 36'-10"
+2025-05-16 16:45:00,970 - processing - INFO - ==================================================
+2025-05-16 16:45:01,015 - processing - INFO - Processing attachments below neutral for pole PL373935
+2025-05-16 16:45:01,018 - processing - INFO - 
+==================================================
+2025-05-16 16:45:01,018 - processing - INFO - POLE SUMMARY: PL373935
+2025-05-16 16:45:01,018 - processing - INFO - ==================================================
+2025-05-16 16:45:01,019 - processing - INFO - Found 1 neutral wire(s):
+2025-05-16 16:45:01,019 - processing - INFO -   1. CPS ENERGY Neutral at height 350.65 inches (source: katapult)
+2025-05-16 16:45:01,020 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 350.65 inches
+2025-05-16 16:45:01,020 - processing - INFO - Found 4 attachment(s) below neutral:
+2025-05-16 16:45:01,020 - processing - INFO -   1. CPS ENERGY Neutral at height 29'-3"
+2025-05-16 16:45:01,020 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 27'-9"
+2025-05-16 16:45:01,021 - processing - INFO -   3. AT&T Fiber Optic Com at height 24'-10"
+2025-05-16 16:45:01,021 - processing - INFO -   4. AT&T Telco Com at height 23'-12"
+2025-05-16 16:45:01,021 - processing - INFO - ==================================================
+2025-05-16 16:45:01,060 - processing - INFO - Processing attachments below neutral for pole PL398490
+2025-05-16 16:45:01,063 - processing - INFO - 
+==================================================
+2025-05-16 16:45:01,064 - processing - INFO - POLE SUMMARY: PL398490
+2025-05-16 16:45:01,064 - processing - INFO - ==================================================
+2025-05-16 16:45:01,064 - processing - INFO - Found 1 neutral wire(s):
+2025-05-16 16:45:01,065 - processing - INFO -   1. CPS ENERGY Neutral at height 326.42 inches (source: katapult)
+2025-05-16 16:45:01,065 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 326.42 inches
+2025-05-16 16:45:01,065 - processing - INFO - Found 5 attachment(s) below neutral:
+2025-05-16 16:45:01,066 - processing - INFO -   1. CPS ENERGY Neutral at height 27'-2"
+2025-05-16 16:45:01,066 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 26'-0"
+2025-05-16 16:45:01,066 - processing - INFO -   3. AT&T Fiber Optic Com at height 24'-10"
+2025-05-16 16:45:01,067 - processing - INFO -   4. AT&T Telco Com at height 23'-11"
+2025-05-16 16:45:01,067 - processing - INFO -   5. CPS ENERGY Street Light Feed at height 27'-2"
+2025-05-16 16:45:01,067 - processing - INFO - ==================================================
+2025-05-16 16:45:01,124 - processing - INFO - Processing attachments below neutral for pole PL900997
+2025-05-16 16:45:01,130 - processing - INFO - 
+==================================================
+2025-05-16 16:45:01,130 - processing - INFO - POLE SUMMARY: PL900997
+2025-05-16 16:45:01,131 - processing - INFO - ==================================================
+2025-05-16 16:45:01,131 - processing - INFO - Found 4 neutral wire(s):
+2025-05-16 16:45:01,131 - processing - INFO -   1. CPS ENERGY Neutral at height 324.73 inches (source: katapult)
+2025-05-16 16:45:01,131 - processing - INFO -   2. CPS ENERGY Neutral at height 342.91 inches (source: katapult)
+2025-05-16 16:45:01,132 - processing - INFO -   3. CPS Energy  at height 325.0001755 inches (source: spidacalc)
+2025-05-16 16:45:01,132 - processing - INFO -   4. CPS Energy  at height 325.0001755 inches (source: spidacalc)
+2025-05-16 16:45:01,132 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 342.91 inches
+2025-05-16 16:45:01,133 - processing - INFO - Found 7 attachment(s) below neutral:
+2025-05-16 16:45:01,133 - processing - INFO -   1. CPS ENERGY Neutral at height 27'-1"
+2025-05-16 16:45:01,133 - processing - INFO -   2. CPS ENERGY Street Light Feed at height 27'-1"
+2025-05-16 16:45:01,134 - processing - INFO -   3. CPS ENERGY Supply Fiber at height 25'-10"
+2025-05-16 16:45:01,134 - processing - INFO -   4. AT&T Fiber Optic Com at height 21'-6"
+2025-05-16 16:45:01,134 - processing - INFO -   5. AT&T Telco Com at height 20'-6"
+2025-05-16 16:45:01,135 - processing - INFO -   6. CPS ENERGY Service at height 27'-1"
+2025-05-16 16:45:01,135 - processing - INFO -   7. Charter Fiber Optic Com at height 21'-6"
+2025-05-16 16:45:01,135 - processing - INFO - ==================================================
+2025-05-16 16:45:01,208 - processing - INFO - Processing attachments below neutral for pole PL404474
+2025-05-16 16:45:01,213 - processing - INFO - 
+==================================================
+2025-05-16 16:45:01,214 - processing - INFO - POLE SUMMARY: PL404474
+2025-05-16 16:45:01,214 - processing - INFO - ==================================================
+2025-05-16 16:45:01,214 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:45:01,215 - processing - INFO -   1. CPS ENERGY Neutral at height 311.85 inches (source: katapult)
+2025-05-16 16:45:01,215 - processing - INFO -   2. CPS Energy  at height 312.00016848000007 inches (source: spidacalc)
+2025-05-16 16:45:01,215 - processing - INFO -   3. CPS Energy  at height 312.00016848000007 inches (source: spidacalc)
+2025-05-16 16:45:01,216 - processing - INFO - Highest neutral: CPS Energy  at height 312.00016848000007 inches
+2025-05-16 16:45:01,216 - processing - INFO - Found 6 attachment(s) below neutral:
+2025-05-16 16:45:01,216 - processing - INFO -   1. CPS ENERGY Neutral at height 25'-12"
+2025-05-16 16:45:01,216 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 24'-6"
+2025-05-16 16:45:01,217 - processing - INFO -   3. AT&T Fiber Optic Com at height 22'-9"
+2025-05-16 16:45:01,217 - processing - INFO -   4. AT&T Telco Com at height 21'-7"
+2025-05-16 16:45:01,218 - processing - INFO -   5. CPS ENERGY Street Light Feed at height 25'-12"
+2025-05-16 16:45:01,218 - processing - INFO -   6. Charter Fiber Optic Com at height 21'-7"
+2025-05-16 16:45:01,218 - processing - INFO - ==================================================
+2025-05-16 16:45:01,278 - processing - INFO - Processing attachments below neutral for pole PL401451
+2025-05-16 16:45:01,283 - processing - INFO - 
+==================================================
+2025-05-16 16:45:01,283 - processing - INFO - POLE SUMMARY: PL401451
+2025-05-16 16:45:01,284 - processing - INFO - ==================================================
+2025-05-16 16:45:01,284 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:45:01,285 - processing - INFO -   1. CPS ENERGY Neutral at height 318.97 inches (source: katapult)
+2025-05-16 16:45:01,285 - processing - INFO -   2. CPS ENERGY Neutral at height 314.28 inches (source: katapult)
+2025-05-16 16:45:01,286 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 318.97 inches
+2025-05-16 16:45:01,286 - processing - INFO - Found 4 attachment(s) below neutral:
+2025-05-16 16:45:01,287 - processing - INFO -   1. CPS ENERGY Neutral at height 26'-7"
+2025-05-16 16:45:01,287 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 24'-11"
+2025-05-16 16:45:01,287 - processing - INFO -   3. AT&T Fiber Optic Com at height 22'-6"
+2025-05-16 16:45:01,287 - processing - INFO -   4. AT&T Telco Com at height 21'-3"
+2025-05-16 16:45:01,288 - processing - INFO - ==================================================
+2025-05-16 16:45:01,367 - processing - INFO - Processing attachments below neutral for pole PL398491
+2025-05-16 16:45:01,373 - processing - INFO - 
+==================================================
+2025-05-16 16:45:01,374 - processing - INFO - POLE SUMMARY: PL398491
+2025-05-16 16:45:01,374 - processing - INFO - ==================================================
+2025-05-16 16:45:01,374 - processing - INFO - Found 4 neutral wire(s):
+2025-05-16 16:45:01,375 - processing - INFO -   1. CPS ENERGY Neutral at height 325.34 inches (source: katapult)
+2025-05-16 16:45:01,375 - processing - INFO -   2. CPS ENERGY Neutral at height 322.75 inches (source: katapult)
+2025-05-16 16:45:01,376 - processing - INFO -   3. CPS Energy  at height 324.00017496000004 inches (source: spidacalc)
+2025-05-16 16:45:01,376 - processing - INFO -   4. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:45:01,376 - processing - INFO - Highest neutral: CPS Energy  at height 327.0001765800001 inches
+2025-05-16 16:45:01,377 - processing - INFO - Found 12 attachment(s) below neutral:
+2025-05-16 16:45:01,377 - processing - INFO -   1. AT&T Com Drop at height 19'-8"
+2025-05-16 16:45:01,377 - processing - INFO -   2. CPS ENERGY Service at height 27'-1"
+2025-05-16 16:45:01,378 - processing - INFO -   3. AT&T Com Drop at height 19'-6"
+2025-05-16 16:45:01,378 - processing - INFO -   4. AT&T Com Drop at height 19'-6"
+2025-05-16 16:45:01,378 - processing - INFO -   5. CPS ENERGY Neutral at height 27'-1"
+2025-05-16 16:45:01,378 - processing - INFO -   6. CPS ENERGY Neutral at height 26'-11"
+2025-05-16 16:45:01,379 - processing - INFO -   7. CPS ENERGY Supply Fiber at height 25'-6"
+2025-05-16 16:45:01,379 - processing - INFO -   8. AT&T Fiber Optic Com at height 21'-4"
+2025-05-16 16:45:01,379 - processing - INFO -   9. AT&T Telco Com at height 20'-4"
+2025-05-16 16:45:01,379 - processing - INFO -   10. AT&T Com Drop at height 19'-8"
+2025-05-16 16:45:01,379 - processing - INFO -   11. Charter Fiber Optic Com at height 22'-4"
+2025-05-16 16:45:01,380 - processing - INFO -   12. CPS ENERGY Supply Fiber at height 25'-9"
+2025-05-16 16:45:01,380 - processing - INFO - ==================================================
+2025-05-16 16:45:01,493 - processing - INFO - Processing attachments below neutral for pole PL410620
+2025-05-16 16:45:01,498 - processing - INFO - 
+==================================================
+2025-05-16 16:45:01,498 - processing - INFO - POLE SUMMARY: PL410620
+2025-05-16 16:45:01,499 - processing - INFO - ==================================================
+2025-05-16 16:45:01,499 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:45:01,499 - processing - INFO -   1. CPS ENERGY Neutral at height 354.28 inches (source: katapult)
+2025-05-16 16:45:01,500 - processing - INFO -   2. CPS Energy  at height 354.0001911600001 inches (source: spidacalc)
+2025-05-16 16:45:01,500 - processing - INFO -   3. CPS Energy  at height 354.0001911600001 inches (source: spidacalc)
+2025-05-16 16:45:01,500 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 354.28 inches
+2025-05-16 16:45:01,501 - processing - INFO - Found 6 attachment(s) below neutral:
+2025-05-16 16:45:01,501 - processing - INFO -   1. CPS ENERGY Neutral at height 29'-6"
+2025-05-16 16:45:01,501 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 27'-12"
+2025-05-16 16:45:01,502 - processing - INFO -   3. AT&T Fiber Optic Com at height 23'-7"
+2025-05-16 16:45:01,502 - processing - INFO -   4. AT&T Telco Com at height 22'-4"
+2025-05-16 16:45:01,502 - processing - INFO -   5. AT&T Com Drop at height 21'-5"
+2025-05-16 16:45:01,503 - processing - INFO -   6. Charter Fiber Optic Com at height 24'-7"
+2025-05-16 16:45:01,503 - processing - INFO - ==================================================
+2025-05-16 16:45:01,568 - processing - INFO - Processing attachments below neutral for pole PL389359
+2025-05-16 16:45:01,573 - processing - INFO - 
+==================================================
+2025-05-16 16:45:01,574 - processing - INFO - POLE SUMMARY: PL389359
+2025-05-16 16:45:01,574 - processing - INFO - ==================================================
+2025-05-16 16:45:01,574 - processing - INFO - Found 5 neutral wire(s):
+2025-05-16 16:45:01,575 - processing - INFO -   1. CPS ENERGY Neutral at height 327.24 inches (source: katapult)
+2025-05-16 16:45:01,575 - processing - INFO -   2. CPS ENERGY Neutral at height 327.15 inches (source: katapult)
+2025-05-16 16:45:01,576 - processing - INFO -   3. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:45:01,576 - processing - INFO -   4. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:45:01,576 - processing - INFO -   5. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:45:01,577 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 327.24 inches
+2025-05-16 16:45:01,577 - processing - INFO - Found 6 attachment(s) below neutral:
+2025-05-16 16:45:01,578 - processing - INFO -   1. CPS ENERGY Neutral at height 27'-3"
+2025-05-16 16:45:01,578 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 25'-9"
+2025-05-16 16:45:01,578 - processing - INFO -   3. AT&T Fiber Optic Com at height 22'-8"
+2025-05-16 16:45:01,579 - processing - INFO -   4. AT&T Telco Com at height 21'-8"
+2025-05-16 16:45:01,579 - processing - INFO -   5. CPS ENERGY Neutral at height 27'-3"
+2025-05-16 16:45:01,579 - processing - INFO -   6. Charter Fiber Optic Com at height 22'-12"
+2025-05-16 16:45:01,580 - processing - INFO - ==================================================
+2025-05-16 16:46:08,337 - processing - INFO - Processing attachments below neutral for pole PL370858
+2025-05-16 16:46:08,343 - processing - INFO - 
+==================================================
+2025-05-16 16:46:08,343 - processing - INFO - POLE SUMMARY: PL370858
+2025-05-16 16:46:08,344 - processing - INFO - ==================================================
+2025-05-16 16:46:08,344 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:46:08,345 - processing - INFO -   1. CPS ENERGY Neutral at height 317.6 inches (source: katapult)
+2025-05-16 16:46:08,346 - processing - INFO -   2. CPS Energy  at height 318.0001717200001 inches (source: spidacalc)
+2025-05-16 16:46:08,346 - processing - INFO -   3. CPS Energy  at height 318.0001717200001 inches (source: spidacalc)
+2025-05-16 16:46:08,347 - processing - INFO - Highest neutral: CPS Energy  at height 318.0001717200001 inches
+2025-05-16 16:46:08,347 - processing - INFO - Found 5 attachment(s) below neutral:
+2025-05-16 16:46:08,348 - processing - INFO -   1. CPS ENERGY Neutral at height 26'-6"
+2025-05-16 16:46:08,348 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 25'-5"
+2025-05-16 16:46:08,348 - processing - INFO -   3. AT&T Fiber Optic Com at height 22'-10"
+2025-05-16 16:46:08,349 - processing - INFO -   4. AT&T Telco Com at height 21'-10"
+2025-05-16 16:46:08,349 - processing - INFO -   5. Charter Fiber Optic Com at height 22'-1"
+2025-05-16 16:46:08,349 - processing - INFO - ==================================================
+2025-05-16 16:46:08,428 - processing - INFO - Processing attachments below neutral for pole PL379971
+2025-05-16 16:46:08,432 - processing - INFO - 
+==================================================
+2025-05-16 16:46:08,432 - processing - INFO - POLE SUMMARY: PL379971
+2025-05-16 16:46:08,433 - processing - INFO - ==================================================
+2025-05-16 16:46:08,433 - processing - INFO - Found 1 neutral wire(s):
+2025-05-16 16:46:08,434 - processing - INFO -   1. CPS ENERGY Neutral at height 316.48 inches (source: katapult)
+2025-05-16 16:46:08,434 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 316.48 inches
+2025-05-16 16:46:08,434 - processing - INFO - Found 4 attachment(s) below neutral:
+2025-05-16 16:46:08,435 - processing - INFO -   1. CPS ENERGY Neutral at height 26'-4"
+2025-05-16 16:46:08,435 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 24'-9"
+2025-05-16 16:46:08,435 - processing - INFO -   3. AT&T Fiber Optic Com at height 23'-9"
+2025-05-16 16:46:08,436 - processing - INFO -   4. AT&T Telco Com at height 22'-9"
+2025-05-16 16:46:08,436 - processing - INFO - ==================================================
+2025-05-16 16:46:08,488 - processing - INFO - Processing attachments below neutral for pole PL379966
+2025-05-16 16:46:08,492 - processing - INFO - 
+==================================================
+2025-05-16 16:46:08,493 - processing - INFO - POLE SUMMARY: PL379966
+2025-05-16 16:46:08,493 - processing - INFO - ==================================================
+2025-05-16 16:46:08,494 - processing - INFO - Found 1 neutral wire(s):
+2025-05-16 16:46:08,494 - processing - INFO -   1. CPS ENERGY Neutral at height 330.61 inches (source: katapult)
+2025-05-16 16:46:08,495 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 330.61 inches
+2025-05-16 16:46:08,495 - processing - INFO - Found 4 attachment(s) below neutral:
+2025-05-16 16:46:08,495 - processing - INFO -   1. CPS ENERGY Neutral at height 27'-7"
+2025-05-16 16:46:08,496 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 26'-4"
+2025-05-16 16:46:08,496 - processing - INFO -   3. AT&T Fiber Optic Com at height 23'-7"
+2025-05-16 16:46:08,497 - processing - INFO -   4. AT&T Telco Com at height 22'-7"
+2025-05-16 16:46:08,497 - processing - INFO - ==================================================
+2025-05-16 16:46:08,600 - processing - INFO - Processing attachments below neutral for pole PL373937
+2025-05-16 16:46:08,604 - processing - INFO - 
+==================================================
+2025-05-16 16:46:08,604 - processing - INFO - POLE SUMMARY: PL373937
+2025-05-16 16:46:08,605 - processing - INFO - ==================================================
+2025-05-16 16:46:08,605 - processing - INFO - Found 1 neutral wire(s):
+2025-05-16 16:46:08,606 - processing - INFO -   1. CPS ENERGY Neutral at height 463.93 inches (source: katapult)
+2025-05-16 16:46:08,606 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 463.93 inches
+2025-05-16 16:46:08,607 - processing - INFO - Found 5 attachment(s) below neutral:
+2025-05-16 16:46:08,607 - processing - INFO -   1. CPS ENERGY Neutral at height 38'-8"
+2025-05-16 16:46:08,608 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 36'-8"
+2025-05-16 16:46:08,608 - processing - INFO -   3. AT&T Fiber Optic Com at height 32'-8"
+2025-05-16 16:46:08,608 - processing - INFO -   4. AT&T Telco Com at height 27'-6"
+2025-05-16 16:46:08,609 - processing - INFO -   5. CPS ENERGY Supply Fiber at height 36'-5"
+2025-05-16 16:46:08,609 - processing - INFO - ==================================================
+2025-05-16 16:46:08,725 - processing - INFO - Processing attachments below neutral for pole PL404475
+2025-05-16 16:46:08,732 - processing - INFO - 
+==================================================
+2025-05-16 16:46:08,732 - processing - INFO - POLE SUMMARY: PL404475
+2025-05-16 16:46:08,733 - processing - INFO - ==================================================
+2025-05-16 16:46:08,733 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:46:08,734 - processing - INFO -   1. CPS ENERGY Neutral at height 463.45 inches (source: katapult)
+2025-05-16 16:46:08,734 - processing - INFO -   2. CPS ENERGY Neutral at height 432.76 inches (source: katapult)
+2025-05-16 16:46:08,734 - processing - INFO -   3. CPS ENERGY Neutral at height 432.92 inches (source: katapult)
+2025-05-16 16:46:08,735 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 463.45 inches
+2025-05-16 16:46:08,735 - processing - INFO - Found 7 attachment(s) below neutral:
+2025-05-16 16:46:08,736 - processing - INFO -   1. CPS ENERGY Neutral at height 38'-7"
+2025-05-16 16:46:08,736 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 37'-1"
+2025-05-16 16:46:08,737 - processing - INFO -   3. AT&T Fiber Optic Com at height 31'-5"
+2025-05-16 16:46:08,737 - processing - INFO -   4. AT&T Telco Com at height 21'-1"
+2025-05-16 16:46:08,738 - processing - INFO -   5. CPS ENERGY Neutral at height 36'-1"
+2025-05-16 16:46:08,738 - processing - INFO -   6. CPS ENERGY Neutral at height 36'-1"
+2025-05-16 16:46:08,738 - processing - INFO -   7. CPS ENERGY Supply Fiber at height 36'-10"
+2025-05-16 16:46:08,739 - processing - INFO - ==================================================
+2025-05-16 16:46:08,792 - processing - INFO - Processing attachments below neutral for pole PL373935
+2025-05-16 16:46:08,796 - processing - INFO - 
+==================================================
+2025-05-16 16:46:08,796 - processing - INFO - POLE SUMMARY: PL373935
+2025-05-16 16:46:08,797 - processing - INFO - ==================================================
+2025-05-16 16:46:08,797 - processing - INFO - Found 1 neutral wire(s):
+2025-05-16 16:46:08,798 - processing - INFO -   1. CPS ENERGY Neutral at height 350.65 inches (source: katapult)
+2025-05-16 16:46:08,798 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 350.65 inches
+2025-05-16 16:46:08,798 - processing - INFO - Found 4 attachment(s) below neutral:
+2025-05-16 16:46:08,799 - processing - INFO -   1. CPS ENERGY Neutral at height 29'-3"
+2025-05-16 16:46:08,799 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 27'-9"
+2025-05-16 16:46:08,800 - processing - INFO -   3. AT&T Fiber Optic Com at height 24'-10"
+2025-05-16 16:46:08,800 - processing - INFO -   4. AT&T Telco Com at height 23'-12"
+2025-05-16 16:46:08,801 - processing - INFO - ==================================================
+2025-05-16 16:46:08,851 - processing - INFO - Processing attachments below neutral for pole PL398490
+2025-05-16 16:46:08,855 - processing - INFO - 
+==================================================
+2025-05-16 16:46:08,855 - processing - INFO - POLE SUMMARY: PL398490
+2025-05-16 16:46:08,856 - processing - INFO - ==================================================
+2025-05-16 16:46:08,856 - processing - INFO - Found 1 neutral wire(s):
+2025-05-16 16:46:08,857 - processing - INFO -   1. CPS ENERGY Neutral at height 326.42 inches (source: katapult)
+2025-05-16 16:46:08,857 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 326.42 inches
+2025-05-16 16:46:08,858 - processing - INFO - Found 5 attachment(s) below neutral:
+2025-05-16 16:46:08,858 - processing - INFO -   1. CPS ENERGY Neutral at height 27'-2"
+2025-05-16 16:46:08,858 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 26'-0"
+2025-05-16 16:46:08,859 - processing - INFO -   3. AT&T Fiber Optic Com at height 24'-10"
+2025-05-16 16:46:08,859 - processing - INFO -   4. AT&T Telco Com at height 23'-11"
+2025-05-16 16:46:08,859 - processing - INFO -   5. CPS ENERGY Street Light Feed at height 27'-2"
+2025-05-16 16:46:08,860 - processing - INFO - ==================================================
+2025-05-16 16:46:08,934 - processing - INFO - Processing attachments below neutral for pole PL900997
+2025-05-16 16:46:08,942 - processing - INFO - 
+==================================================
+2025-05-16 16:46:08,943 - processing - INFO - POLE SUMMARY: PL900997
+2025-05-16 16:46:08,943 - processing - INFO - ==================================================
+2025-05-16 16:46:08,944 - processing - INFO - Found 4 neutral wire(s):
+2025-05-16 16:46:08,944 - processing - INFO -   1. CPS ENERGY Neutral at height 324.73 inches (source: katapult)
+2025-05-16 16:46:08,944 - processing - INFO -   2. CPS ENERGY Neutral at height 342.91 inches (source: katapult)
+2025-05-16 16:46:08,945 - processing - INFO -   3. CPS Energy  at height 325.0001755 inches (source: spidacalc)
+2025-05-16 16:46:08,945 - processing - INFO -   4. CPS Energy  at height 325.0001755 inches (source: spidacalc)
+2025-05-16 16:46:08,946 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 342.91 inches
+2025-05-16 16:46:08,946 - processing - INFO - Found 7 attachment(s) below neutral:
+2025-05-16 16:46:08,947 - processing - INFO -   1. CPS ENERGY Neutral at height 27'-1"
+2025-05-16 16:46:08,947 - processing - INFO -   2. CPS ENERGY Street Light Feed at height 27'-1"
+2025-05-16 16:46:08,947 - processing - INFO -   3. CPS ENERGY Supply Fiber at height 25'-10"
+2025-05-16 16:46:08,948 - processing - INFO -   4. AT&T Fiber Optic Com at height 21'-6"
+2025-05-16 16:46:08,948 - processing - INFO -   5. AT&T Telco Com at height 20'-6"
+2025-05-16 16:46:08,948 - processing - INFO -   6. CPS ENERGY Service at height 27'-1"
+2025-05-16 16:46:08,949 - processing - INFO -   7. Charter Fiber Optic Com at height 21'-6"
+2025-05-16 16:46:08,949 - processing - INFO - ==================================================
+2025-05-16 16:46:09,037 - processing - INFO - Processing attachments below neutral for pole PL404474
+2025-05-16 16:46:09,042 - processing - INFO - 
+==================================================
+2025-05-16 16:46:09,043 - processing - INFO - POLE SUMMARY: PL404474
+2025-05-16 16:46:09,043 - processing - INFO - ==================================================
+2025-05-16 16:46:09,044 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:46:09,044 - processing - INFO -   1. CPS ENERGY Neutral at height 311.85 inches (source: katapult)
+2025-05-16 16:46:09,044 - processing - INFO -   2. CPS Energy  at height 312.00016848000007 inches (source: spidacalc)
+2025-05-16 16:46:09,045 - processing - INFO -   3. CPS Energy  at height 312.00016848000007 inches (source: spidacalc)
+2025-05-16 16:46:09,046 - processing - INFO - Highest neutral: CPS Energy  at height 312.00016848000007 inches
+2025-05-16 16:46:09,046 - processing - INFO - Found 6 attachment(s) below neutral:
+2025-05-16 16:46:09,046 - processing - INFO -   1. CPS ENERGY Neutral at height 25'-12"
+2025-05-16 16:46:09,047 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 24'-6"
+2025-05-16 16:46:09,047 - processing - INFO -   3. AT&T Fiber Optic Com at height 22'-9"
+2025-05-16 16:46:09,047 - processing - INFO -   4. AT&T Telco Com at height 21'-7"
+2025-05-16 16:46:09,048 - processing - INFO -   5. CPS ENERGY Street Light Feed at height 25'-12"
+2025-05-16 16:46:09,048 - processing - INFO -   6. Charter Fiber Optic Com at height 21'-7"
+2025-05-16 16:46:09,048 - processing - INFO - ==================================================
+2025-05-16 16:46:09,109 - processing - INFO - Processing attachments below neutral for pole PL401451
+2025-05-16 16:46:09,114 - processing - INFO - 
+==================================================
+2025-05-16 16:46:09,115 - processing - INFO - POLE SUMMARY: PL401451
+2025-05-16 16:46:09,115 - processing - INFO - ==================================================
+2025-05-16 16:46:09,116 - processing - INFO - Found 2 neutral wire(s):
+2025-05-16 16:46:09,116 - processing - INFO -   1. CPS ENERGY Neutral at height 318.97 inches (source: katapult)
+2025-05-16 16:46:09,116 - processing - INFO -   2. CPS ENERGY Neutral at height 314.28 inches (source: katapult)
+2025-05-16 16:46:09,117 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 318.97 inches
+2025-05-16 16:46:09,117 - processing - INFO - Found 4 attachment(s) below neutral:
+2025-05-16 16:46:09,118 - processing - INFO -   1. CPS ENERGY Neutral at height 26'-7"
+2025-05-16 16:46:09,118 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 24'-11"
+2025-05-16 16:46:09,119 - processing - INFO -   3. AT&T Fiber Optic Com at height 22'-6"
+2025-05-16 16:46:09,119 - processing - INFO -   4. AT&T Telco Com at height 21'-3"
+2025-05-16 16:46:09,120 - processing - INFO - ==================================================
+2025-05-16 16:46:09,225 - processing - INFO - Processing attachments below neutral for pole PL398491
+2025-05-16 16:46:09,234 - processing - INFO - 
+==================================================
+2025-05-16 16:46:09,235 - processing - INFO - POLE SUMMARY: PL398491
+2025-05-16 16:46:09,235 - processing - INFO - ==================================================
+2025-05-16 16:46:09,236 - processing - INFO - Found 4 neutral wire(s):
+2025-05-16 16:46:09,236 - processing - INFO -   1. CPS ENERGY Neutral at height 325.34 inches (source: katapult)
+2025-05-16 16:46:09,237 - processing - INFO -   2. CPS ENERGY Neutral at height 322.75 inches (source: katapult)
+2025-05-16 16:46:09,237 - processing - INFO -   3. CPS Energy  at height 324.00017496000004 inches (source: spidacalc)
+2025-05-16 16:46:09,238 - processing - INFO -   4. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:46:09,238 - processing - INFO - Highest neutral: CPS Energy  at height 327.0001765800001 inches
+2025-05-16 16:46:09,239 - processing - INFO - Found 12 attachment(s) below neutral:
+2025-05-16 16:46:09,239 - processing - INFO -   1. AT&T Com Drop at height 19'-8"
+2025-05-16 16:46:09,240 - processing - INFO -   2. CPS ENERGY Service at height 27'-1"
+2025-05-16 16:46:09,240 - processing - INFO -   3. AT&T Com Drop at height 19'-6"
+2025-05-16 16:46:09,240 - processing - INFO -   4. AT&T Com Drop at height 19'-6"
+2025-05-16 16:46:09,241 - processing - INFO -   5. CPS ENERGY Neutral at height 27'-1"
+2025-05-16 16:46:09,241 - processing - INFO -   6. CPS ENERGY Neutral at height 26'-11"
+2025-05-16 16:46:09,241 - processing - INFO -   7. CPS ENERGY Supply Fiber at height 25'-6"
+2025-05-16 16:46:09,242 - processing - INFO -   8. AT&T Fiber Optic Com at height 21'-4"
+2025-05-16 16:46:09,242 - processing - INFO -   9. AT&T Telco Com at height 20'-4"
+2025-05-16 16:46:09,243 - processing - INFO -   10. AT&T Com Drop at height 19'-8"
+2025-05-16 16:46:09,243 - processing - INFO -   11. Charter Fiber Optic Com at height 22'-4"
+2025-05-16 16:46:09,244 - processing - INFO -   12. CPS ENERGY Supply Fiber at height 25'-9"
+2025-05-16 16:46:09,244 - processing - INFO - ==================================================
+2025-05-16 16:46:09,393 - processing - INFO - Processing attachments below neutral for pole PL410620
+2025-05-16 16:46:09,399 - processing - INFO - 
+==================================================
+2025-05-16 16:46:09,399 - processing - INFO - POLE SUMMARY: PL410620
+2025-05-16 16:46:09,400 - processing - INFO - ==================================================
+2025-05-16 16:46:09,400 - processing - INFO - Found 3 neutral wire(s):
+2025-05-16 16:46:09,401 - processing - INFO -   1. CPS ENERGY Neutral at height 354.28 inches (source: katapult)
+2025-05-16 16:46:09,401 - processing - INFO -   2. CPS Energy  at height 354.0001911600001 inches (source: spidacalc)
+2025-05-16 16:46:09,402 - processing - INFO -   3. CPS Energy  at height 354.0001911600001 inches (source: spidacalc)
+2025-05-16 16:46:09,402 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 354.28 inches
+2025-05-16 16:46:09,403 - processing - INFO - Found 6 attachment(s) below neutral:
+2025-05-16 16:46:09,403 - processing - INFO -   1. CPS ENERGY Neutral at height 29'-6"
+2025-05-16 16:46:09,403 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 27'-12"
+2025-05-16 16:46:09,404 - processing - INFO -   3. AT&T Fiber Optic Com at height 23'-7"
+2025-05-16 16:46:09,404 - processing - INFO -   4. AT&T Telco Com at height 22'-4"
+2025-05-16 16:46:09,404 - processing - INFO -   5. AT&T Com Drop at height 21'-5"
+2025-05-16 16:46:09,405 - processing - INFO -   6. Charter Fiber Optic Com at height 24'-7"
+2025-05-16 16:46:09,405 - processing - INFO - ==================================================
+2025-05-16 16:46:09,491 - processing - INFO - Processing attachments below neutral for pole PL389359
+2025-05-16 16:46:09,500 - processing - INFO - 
+==================================================
+2025-05-16 16:46:09,501 - processing - INFO - POLE SUMMARY: PL389359
+2025-05-16 16:46:09,502 - processing - INFO - ==================================================
+2025-05-16 16:46:09,502 - processing - INFO - Found 5 neutral wire(s):
+2025-05-16 16:46:09,503 - processing - INFO -   1. CPS ENERGY Neutral at height 327.24 inches (source: katapult)
+2025-05-16 16:46:09,504 - processing - INFO -   2. CPS ENERGY Neutral at height 327.15 inches (source: katapult)
+2025-05-16 16:46:09,505 - processing - INFO -   3. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:46:09,505 - processing - INFO -   4. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:46:09,506 - processing - INFO -   5. CPS Energy  at height 327.0001765800001 inches (source: spidacalc)
+2025-05-16 16:46:09,506 - processing - INFO - Highest neutral: CPS ENERGY Neutral at height 327.24 inches
+2025-05-16 16:46:09,507 - processing - INFO - Found 6 attachment(s) below neutral:
+2025-05-16 16:46:09,508 - processing - INFO -   1. CPS ENERGY Neutral at height 27'-3"
+2025-05-16 16:46:09,508 - processing - INFO -   2. CPS ENERGY Supply Fiber at height 25'-9"
+2025-05-16 16:46:09,509 - processing - INFO -   3. AT&T Fiber Optic Com at height 22'-8"
+2025-05-16 16:46:09,509 - processing - INFO -   4. AT&T Telco Com at height 21'-8"
+2025-05-16 16:46:09,510 - processing - INFO -   5. CPS ENERGY Neutral at height 27'-3"
+2025-05-16 16:46:09,510 - processing - INFO -   6. Charter Fiber Optic Com at height 22'-12"
+2025-05-16 16:46:09,511 - processing - INFO - ==================================================

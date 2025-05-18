@@ -148,83 +148,7 @@
     </script>
     
     <!-- Filter Script for Attachers -->
-    <script>
-        // Function to filter attachers to show wires and equipment below highest neutral
-        function filterAttachersForDisplay(attachers) {
-            if (!attachers || !attachers.length) return [];
-            
-            // First, separate wires from equipment
-            const wires = [];
-            const equipment = [];
-            
-            // Find highest neutral wire position
-            let highestNeutralHeight = -1;
-            
-            // Process all attachers
-            attachers.forEach(attacher => {
-                const description = attacher.description.toLowerCase();
-                
-                // Check if it's a neutral wire
-                if (description.includes('neutral')) {
-                    // Convert existing height to numeric value for comparison
-                    const heightStr = attacher.existing_height;
-                    if (heightStr && heightStr !== 'N/A') {
-                        // Extract numeric height in inches
-                        const match = heightStr.match(/(\d+)\s*ft\s*(\d+)\s*in/);
-                        if (match) {
-                            const feet = parseInt(match[1], 10);
-                            const inches = parseInt(match[2], 10);
-                            const totalInches = (feet * 12) + inches;
-                            
-                            if (totalInches > highestNeutralHeight) {
-                                highestNeutralHeight = totalInches;
-                            }
-                        }
-                    }
-                }
-                
-                // Determine if it's a wire or equipment
-                // Wires typically have descriptions like "AT&T Cable", "CPS ENERGY Neutral", etc.
-                // Equipment typically has descriptions like "CPS ENERGY Transformer", "AT&T Box", etc.
-                const isWire = !description.includes('transformer') && 
-                               !description.includes('box') && 
-                               !description.includes('riser') &&
-                               !description.includes('equipment');
-                
-                if (isWire) {
-                    wires.push(attacher);
-                } else {
-                    equipment.push(attacher);
-                }
-            });
-            
-            // If no neutral wire found, show all attachers
-            if (highestNeutralHeight === -1) {
-                return [...wires, ...equipment];
-            }
-            
-            // Filter equipment to only include those below the highest neutral
-            const filteredEquipment = equipment.filter(eq => {
-                const heightStr = eq.existing_height;
-                if (heightStr && heightStr !== 'N/A') {
-                    const match = heightStr.match(/(\d+)\s*ft\s*(\d+)\s*in/);
-                    if (match) {
-                        const feet = parseInt(match[1], 10);
-                        const inches = parseInt(match[2], 10);
-                        const totalInches = (feet * 12) + inches;
-                        
-                        // Keep equipment below the highest neutral
-                        return totalInches < highestNeutralHeight;
-                    }
-                }
-                // If we can't determine height, include by default
-                return true;
-            });
-            
-            // Combine and return all wires and filtered equipment
-            return [...wires, ...filteredEquipment];
-        }
-    </script>
+    <!-- Filter script has been removed to show all attachments in original order -->
     
     {% for pole in poles %}
     <div class="pole-card">
@@ -263,26 +187,34 @@
             <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var poleAttachers = {{ pole.attachers|tojson|safe }};
-                var filteredAttachers = filterAttachersForDisplay(poleAttachers);
                 
                 // Clear existing table content
                 var tableBody = document.querySelector('#attacher-table-pole-{{ loop.index }} tbody');
                 tableBody.innerHTML = '';
                 
-                // Sort attachers by description
-                filteredAttachers.sort(function(a, b) {
-                    return a.description.localeCompare(b.description);
-                });
+                // Format height function (local to this script)
+                function formatToExcelStyle(heightStr) {
+                    if (!heightStr || heightStr === 'N/A') return 'N/A';
+                    
+                    var match = heightStr.match(/(\d+)\s*ft\s*(\d+)\s*in/);
+                    if (match) {
+                        var feet = parseInt(match[1], 10);
+                        var inches = parseInt(match[2], 10);
+                        return feet + "'-" + inches + '"';
+                    }
+                    return heightStr;
+                }
                 
-                // Add filtered attachers to table
-                if (filteredAttachers.length > 0) {
-                    filteredAttachers.forEach(function(attacher) {
+                // Display all attachers without filtering (to match Excel)
+                if (poleAttachers && poleAttachers.length > 0) {
+                    // No sorting - keep original order to match Excel report
+                    poleAttachers.forEach(function(attacher) {
                         var row = document.createElement('tr');
                         row.innerHTML = 
                             '<td>' + (attacher.description || 'N/A') + '</td>' +
-                            '<td>' + (attacher.existing_height || 'N/A') + '</td>' +
-                            '<td>' + (attacher.proposed_height || 'N/A') + '</td>' +
-                            '<td>' + (attacher.midspan_proposed || 'N/A') + '</td>';
+                            '<td>' + formatToExcelStyle(attacher.existing_height) + '</td>' +
+                            '<td>' + formatToExcelStyle(attacher.proposed_height) + '</td>' +
+                            '<td>' + formatToExcelStyle(attacher.midspan_proposed) + '</td>';
                         tableBody.appendChild(row);
                     });
                 } else {
