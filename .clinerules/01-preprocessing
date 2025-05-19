@@ -1,8 +1,0 @@
-# Targeted Pole Selection
-
-- When processing input data, check for a user-provided list of pole numbers.
-- If a list is provided:
-  - Normalize each pole ID using the `normalize_pole_id` function from `processor/utils.py`.
-  - Filter the processing to include only poles matching these normalized IDs.
-- If no list is provided, proceed to process all available poles.
-- Log the number of poles specified and the number successfully matched and processed.

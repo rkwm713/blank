@@ -1,3 +1,4 @@
+# neutral_identification.py
 """
 Module for neutral wire identification and height normalization.
 
@@ -7,21 +8,9 @@ This module provides functions to identify neutral wires across different data s
 
 import re
 import logging
-
-def get_trace_by_id(katapult, trace_id):
-    """
-    Wrapper function for get_trace_by_id from make_ready_processor.py
-    
-    Args:
-        katapult (dict): The full Katapult JSON data
-        trace_id (str): The trace ID to look up
-        
-    Returns:
-        dict: The trace data if found, or an empty dict if not found
-    """
-    # Import here to avoid circular imports
-    from make_ready_processor import get_trace_by_id as processor_get_trace_by_id
-    return processor_get_trace_by_id(katapult, trace_id)
+from utils import inches_to_feet_inches_str
+from wire_utils import process_wire_height
+from trace_utils import get_trace_by_id, extract_wire_metadata
 
 # Configure logger
 logging.basicConfig(level=logging.INFO, 
@@ -37,6 +26,13 @@ NEUTRAL_PATTERNS = [
     r'secondary\s+neutral',
     r'power\s+neutral',
     r'electric.*neutral',
+    r'power\s+line',        # Additional patterns
+    r'primary',             # Primary wires are typically at neutral height or above
+    r'supply\s+line',
+    r'open\s+wire',
+    r'transmission',
+    r'distribution',
+    r'high\s+voltage',
 ]
 
 def normalize_height_to_inches(height_value, unit='inches'):
@@ -92,441 +88,357 @@ def is_neutral_wire(wire_description):
 
 def identify_neutrals_katapult(pole_data, katapult):
     """
-    Identify neutral wires in Katapult data for a pole.
+    Identify neutral wires from Katapult data.
     
     Args:
-        pole_data: Processed pole data dictionary
-        katapult: Full Katapult JSON data
+        pole_data (dict): Pole data dictionary containing photos and attachers
+        katapult (dict): The full Katapult JSON data
         
     Returns:
-        list: List of dictionaries with neutral wire data
+        list: List of identified neutral wire dictionaries
     """
     neutral_wires = []
     
-    # Find the node data for this pole
-    pole_number = pole_data.get('pole_number')
-    node_id = None
-    
-    # First, try to find the node by pole number
-    for node_id_candidate, node in katapult.get('nodes', {}).items():
-        # Check various places where pole number might be stored
-        attributes = node.get('attributes', {})
-        for attr_key, attr_value in attributes.items():
-            if isinstance(attr_value, dict):
-                for sub_key, sub_value in attr_value.items():
-                    if str(sub_value) == str(pole_number):
-                        node_id = node_id_candidate
-                        break
-                if node_id:
-                    break
-            elif str(attr_value) == str(pole_number):
-                node_id = node_id_candidate
-                break
-        if node_id:
-            break
-    
-    if not node_id:
-        logger.warning(f"Could not find node for pole {pole_number}")
-        # Process photos directly from pole_data as fallback
-        photos = pole_data.get('photos', {})
-    else:
-        # Get photos from the node
-        node = katapult['nodes'][node_id]
-        photos = node.get('photos', {})
-        logger.info(f"Found node {node_id} for pole {pole_number} with {len(photos)} photos")
-    
-    # Process all photos and their wires
-    for photo_id, photo in photos.items():
-        try:
-            # Ensure photo has data
-            if not isinstance(photo, dict):
+    # Process photos in pole data
+    for photo_id, photo in pole_data.get('photos', {}).items():
+        photofirst_data = photo.get('photofirst_data', {})
+        
+        # Process wire data (may be list or dictionary)
+        wire_data = photofirst_data.get('wire', {})
+        wire_items = []
+        
+        if isinstance(wire_data, list):
+            wire_items = wire_data
+        elif isinstance(wire_data, dict):
+            wire_items = list(wire_data.values())
+        
+        for wire in wire_items:
+            if not isinstance(wire, dict):
                 continue
-                
-            # For nodes, actual photo data is in katapult['photos']
-            if node_id:
-                # If this is an association object, get the actual photo
-                if 'association' in photo:
-                    photofirst_data = katapult.get('photos', {}).get(photo_id, {}).get('photofirst_data', {})
-                else:
-                    photofirst_data = photo.get('photofirst_data', {})
-            else:
-                # Directly use photo data from pole_data (test data format)
-                photofirst_data = photo.get('photofirst_data', {})
             
-            # Get wire data - can be a dict or list
-            wire_data = photofirst_data.get('wire', {})
+            # Get trace ID from wire
+            trace_id = wire.get('_trace', '')
+            if not trace_id:
+                continue
             
-            # Convert to a consistent format (list of wire objects)
-            wires = []
-            if isinstance(wire_data, list):
-                wires = wire_data
-            elif isinstance(wire_data, dict):
-                wires = list(wire_data.values())
+            # Look up trace data
+            trace = get_trace_by_id(katapult, trace_id)
+            if not trace:
+                continue
             
-            # Process each wire
-            for wire in wires:
-                if not isinstance(wire, dict):
-                    continue
+            # Extract metadata
+            wire_meta = extract_wire_metadata(wire, trace)
+            owner = wire_meta['owner']
+            cable_type = wire_meta['cable_type']
+            
+            # Check if this is a neutral wire
+            is_neutral = False
+            
+            # Check cable type for neutral indicators
+            if isinstance(cable_type, str):
+                cable_type_lower = cable_type.lower()
+                if 'neutral' in cable_type_lower:
+                    is_neutral = True
+            
+            # Check trace data for neutral indicators
+            if not is_neutral and isinstance(trace, dict):
+                trace_cable_type = trace.get('cable_type', '').lower()
+                if 'neutral' in trace_cable_type:
+                    is_neutral = True
                 
-                # Get trace ID and look up trace data
-                trace_id = wire.get('_trace', '')
-                if not trace_id:
-                    continue
-                    
-                # Get height value
-                measured_height = wire.get('_measured_height')
-                if not measured_height:
-                    continue
+                # Check usage group
+                usage_group = trace.get('usageGroup', '').lower()
+                if 'neutral' in usage_group:
+                    is_neutral = True
+            
+            if is_neutral:
+                # Process wire height
+                height_inches = process_wire_height(wire)
+                height_str = inches_to_feet_inches_str(height_inches)
                 
-                # Use the trace ID to look up in traces.trace_data
-                trace_data = None
+                # Create neutral wire object
+                neutral_wire = {
+                    'description': f"{owner} Neutral",
+                    'existing_height': height_str,
+                    'raw_existing_height_inches': height_inches,
+                    'photo_id': photo_id,
+                    'wire_id': wire.get('id'),
+                    'is_neutral': True
+                }
                 
-                # First check if traces is a dict with trace_data
-                if 'traces' in katapult and 'trace_data' in katapult['traces']:
-                    trace_data = katapult['traces']['trace_data'].get(trace_id)
-                
-                # If not found, try looking directly in traces
-                if not trace_data and 'traces' in katapult:
-                    trace_data = katapult['traces'].get(trace_id)
-                
-                # If still not found, use our general trace lookup function
-                if not trace_data:
-                    trace_data = get_trace_by_id(katapult, trace_id)
-                
-                if not trace_data:
-                    logger.warning(f"Could not find trace data for trace_id {trace_id}")
-                    continue
-                
-                # Extract company and cable_type
-                company = trace_data.get('company', '')
-                cable_type = trace_data.get('cable_type', '')
-                wire_description = f"{company} {cable_type}".strip()
-                
-                # Check if this is a neutral wire
-                if 'neutral' in cable_type.lower() or is_neutral_wire(wire_description):
-                    height_inches = normalize_height_to_inches(measured_height, 'inches')
-                    
-                    if height_inches is not None:
-                        neutral_wire = {
-                            'height': height_inches,
-                            'description': wire_description,
-                            'source': 'katapult',
-                            'trace_data': trace_data,
-                            'wire_data': wire,
-                            'trace_id': trace_id
-                        }
-                        neutral_wires.append(neutral_wire)
-                        logger.info(f"Found Katapult neutral wire: {wire_description} at height {height_inches} inches (trace ID: {trace_id})")
-        except Exception as e:
-            logger.error(f"Error processing photo {photo_id}: {str(e)}")
+                neutral_wires.append(neutral_wire)
     
     return neutral_wires
 
 def identify_neutrals_spidacalc(pole_data, spida_pole_data):
     """
-    Identify neutral wires in SPIDAcalc data for a pole.
+    Identify neutral wires from SPIDAcalc data.
     
     Args:
-        pole_data: Processed pole data dictionary
-        spida_pole_data: SPIDAcalc data for this pole
+        pole_data (dict): Pole data dictionary
+        spida_pole_data (dict): The SPIDAcalc data for this pole
         
     Returns:
-        list: List of dictionaries with neutral wire data
+        list: List of identified neutral wire dictionaries
     """
     neutral_wires = []
     
-    if not spida_pole_data:
+    # Check if SPIDAcalc data is available
+    if not spida_pole_data or not isinstance(spida_pole_data, dict):
         return neutral_wires
-        
-    # Find measured and recommended designs
+    
+    # Find measured design
     measured_design = None
-    recommended_design = None
-    
     for design in spida_pole_data.get('designs', []):
-        if not isinstance(design, dict):
-            continue
-            
-        label = design.get('label', '').lower()
-        if label == 'measured design':
+        if design.get('label', '').lower() == 'measured design':
             measured_design = design
-        elif label == 'recommended design':
-            recommended_design = design
+            break
     
-    # Process wires from the measured design
-    if measured_design:
-        for wire in measured_design.get('structure', {}).get('wires', []):
-            if not isinstance(wire, dict):
-                continue
-                
-            # Check for neutral usage group
-            usage_groups = wire.get('usageGroup', [])
-            if isinstance(usage_groups, str):
-                usage_groups = [usage_groups]
-                
-            is_neutral = False
-            for group in usage_groups:
-                if 'NEUTRAL' in group.upper():
-                    is_neutral = True
-                    break
-                    
-            # Also check owner and wire description
-            owner = wire.get('owner', {}).get('id', '')
-            wire_type = wire.get('clientItem', {}).get('type', '')
-            wire_description = f"{owner} {wire_type}"
+    if not measured_design:
+        return neutral_wires
+    
+    # Check wires in measured design for neutrals
+    for wire in measured_design.get('structure', {}).get('wires', []):
+        if not isinstance(wire, dict):
+            continue
+        
+        # Check for neutral indicators
+        is_neutral = False
+        
+        # Check wire description
+        description = wire.get('clientItem', {}).get('description', '').lower()
+        if 'neutral' in description:
+            is_neutral = True
+        
+        # Check usageGroup
+        usage_group = wire.get('usageGroup', '').lower()
+        if 'neutral' in usage_group:
+            is_neutral = True
+        
+        if is_neutral:
+            # Get owner
+            owner = wire.get('owner', {}).get('id', 'Unknown')
             
-            if is_neutral or is_neutral_wire(wire_description):
-                # Get attachment height and convert from meters to inches
-                attachment_height = wire.get('attachmentHeight', {}).get('value')
-                height_inches = normalize_height_to_inches(attachment_height, 'meters')
-                
-                if height_inches is not None:
-                    neutral_wires.append({
-                        'height': height_inches,
-                        'description': wire_description,
-                        'source': 'spidacalc',
-                        'wire_data': wire,
-                        'usage_groups': usage_groups
-                    })
-                    logger.info(f"Found SPIDAcalc neutral wire: {wire_description} at height {height_inches} inches")
+            # Get height
+            height_meters = wire.get('attachmentHeight', {}).get('value')
+            height_inches = height_meters * 39.3701 if height_meters is not None else None
+            height_str = inches_to_feet_inches_str(height_inches)
+            
+            # Create neutral wire object
+            neutral_wire = {
+                'description': f"{owner} Neutral",
+                'existing_height': height_str,
+                'raw_existing_height_inches': height_inches,
+                'wire_id': wire.get('id'),
+                'is_neutral': True,
+                'source': 'spidacalc'
+            }
+            
+            neutral_wires.append(neutral_wire)
     
     return neutral_wires
 
 def get_highest_neutral(neutral_wires):
     """
-    Get the highest neutral wire from a list of neutral wires.
+    Find the highest neutral wire from a list of neutral wires.
     
     Args:
-        neutral_wires: List of neutral wire dictionaries
+        neutral_wires (list): List of neutral wire dictionaries
         
     Returns:
-        dict: The highest neutral wire, or None if no neutral wires
+        dict: The highest neutral wire or None if no neutrals found
     """
     if not neutral_wires:
         return None
-        
-    return max(neutral_wires, key=lambda wire: wire['height'])
+    
+    highest_neutral = neutral_wires[0]
+    highest_height = highest_neutral.get('raw_existing_height_inches', 0) or 0
+    
+    for neutral in neutral_wires[1:]:
+        height = neutral.get('raw_existing_height_inches', 0) or 0
+        if height > highest_height:
+            highest_neutral = neutral
+            highest_height = height
+    
+    return highest_neutral
 
-def identify_attachments_below_neutral(pole_data, highest_neutral, katapult, spida_pole_data=None):
+def identify_attachments_below_neutral(pole_data, highest_neutral, katapult, spida_pole_data):
     """
-    Identify all attachments below the highest neutral wire.
+    Identify attachments that are below the highest neutral wire.
     
     Args:
-        pole_data: Processed pole data dictionary
-        highest_neutral: Dictionary with the highest neutral wire data
-        katapult: Full Katapult JSON data
-        spida_pole_data: SPIDAcalc data for this pole (optional)
+        pole_data (dict): Pole data dictionary
+        highest_neutral (dict): The highest neutral wire
+        katapult (dict): The full Katapult JSON data
+        spida_pole_data (dict): The SPIDAcalc data for this pole
         
     Returns:
-        list: List of attachments below the neutral wire
+        list: List of attachments below the highest neutral
     """
     attachments_below_neutral = []
     
-    # If no neutral wire found, log and return all attachments
+    # If no neutral found, return empty list
     if not highest_neutral:
-        logger.warning(f"No neutral wire found for pole {pole_data.get('pole_number')}. Including all attachments.")
-        return pole_data.get('attachers', [])
+        logger.warning(f"No neutral wire found for pole {pole_data.get('pole_number', 'Unknown')}")
+        return attachments_below_neutral
+    
+    neutral_height = highest_neutral.get('raw_existing_height_inches', 0) or 0
+    logger.info(f"Neutral wire found at height {inches_to_feet_inches_str(neutral_height)} for pole {pole_data.get('pole_number', 'Unknown')}")
+    
+    # Process attachers from pole data
+    skipped_attachments = []
+    for attacher in pole_data.get('attachers', []):
+        # Skip if not a dictionary or has no height
+        if not isinstance(attacher, dict):
+            continue
         
-    neutral_height = highest_neutral['height']
-    logger.info(f"Using highest neutral at height {neutral_height} inches")
+        # Skip reference headers
+        if attacher.get('type', '') in ['reference_header', 'backspan_header']:
+            continue
+        
+        # Prefer existing height, else fallback to proposed height for new installs
+        height_inches = attacher.get('raw_existing_height_inches')
+        if height_inches is None:
+            height_inches = attacher.get('raw_proposed_height_inches')
+        if height_inches is None:
+            continue
+        
+        description = attacher.get('description', 'Unknown')
+        
+        if height_inches < neutral_height:
+            # This attachment is below the neutral
+            logger.info(f"Including attachment below neutral: {description} at height {inches_to_feet_inches_str(height_inches)}")
+            attachments_below_neutral.append(attacher)
+        else:
+            # Log attachments that are above or at the neutral height
+            logger.info(f"Skipping attachment above/at neutral: {description} at height {inches_to_feet_inches_str(height_inches)}")
+            skipped_attachments.append({
+                'description': description,
+                'height': inches_to_feet_inches_str(height_inches)
+            })
     
-    # Find the node ID for this pole in Katapult
-    pole_number = pole_data.get('pole_number')
-    node_id = None
-    node = None
+    # Log skipped attachments
+    if skipped_attachments:
+        logger.info(f"Skipped {len(skipped_attachments)} attachments above/at neutral height for pole {pole_data.get('pole_number', 'Unknown')}")
+        for skipped in skipped_attachments:
+            logger.debug(f"  - {skipped['description']} at {skipped['height']}")
     
-    # First try to find the node by pole number
-    for node_id_candidate, node_data in katapult.get('nodes', {}).items():
-        # Check various places where pole number might be stored
-        attributes = node_data.get('attributes', {})
-        for attr_key, attr_value in attributes.items():
-            if isinstance(attr_value, dict):
-                for sub_key, sub_value in attr_value.items():
-                    if str(sub_value) == str(pole_number):
-                        node_id = node_id_candidate
-                        node = node_data
-                        break
-                if node_id:
+    # Add SPIDAcalc attachments below neutral if available
+    if spida_pole_data:
+        spida_attachments_below_neutral = identify_spida_attachments_below_neutral(
+            spida_pole_data, neutral_height)
+        
+        # Merge with Katapult attachments
+        for spida_attachment in spida_attachments_below_neutral:
+            # Check if this attachment is already in the list by comparing description and height
+            is_duplicate = False
+            for att in attachments_below_neutral:
+                if (att.get('description') == spida_attachment.get('description') and
+                    abs((att.get('raw_existing_height_inches') or 0) - 
+                        (spida_attachment.get('raw_existing_height_inches') or 0)) < 5):
+                    is_duplicate = True
                     break
-            elif str(attr_value) == str(pole_number):
-                node_id = node_id_candidate
-                node = node_data
-                break
-        if node_id:
-            break
-    
-    # If we found the node, parse it directly to find all attachments
-    attachments = []
-    
-    if node:
-        logger.info(f"Found node {node_id} for pole {pole_number}")
-        
-        # Process photos to find all attachments 
-        for photo_id, photo in node.get('photos', {}).items():
-            try:
-                # Check if this is an association object
-                if 'association' in photo:
-                    # Get the actual photo data from katapult photos
-                    photo_data = katapult.get('photos', {}).get(photo_id, {})
-                else:
-                    photo_data = photo
-                
-                # Get photofirst data
-                photofirst_data = photo_data.get('photofirst_data', {})
-                if not photofirst_data:
-                    continue
-                
-                # Get wire data - can be a dict or list
-                wire_data = photofirst_data.get('wire', {})
-                
-                # Convert to a consistent format
-                wires = []
-                if isinstance(wire_data, list):
-                    wires = wire_data
-                elif isinstance(wire_data, dict):
-                    wires = list(wire_data.values())
-                
-                # Process each wire
-                for wire in wires:
-                    if not isinstance(wire, dict):
-                        continue
-                    
-                    # Get trace ID and measured height
-                    trace_id = wire.get('_trace', '')
-                    measured_height = wire.get('_measured_height')
-                    
-                    if not trace_id or not measured_height:
-                        continue
-                    
-                    # Convert height to float for comparison
-                    try:
-                        height_inches = float(measured_height)
-                    except (ValueError, TypeError):
-                        logger.warning(f"Invalid height value: {measured_height}")
-                        continue
-                    
-                    # Get trace data
-                    trace_data = None
-                    
-                    # First check if traces is a dict with trace_data
-                    if 'traces' in katapult and 'trace_data' in katapult['traces']:
-                        trace_data = katapult['traces']['trace_data'].get(trace_id)
-                    
-                    # If not found, try looking directly in traces
-                    if not trace_data and 'traces' in katapult:
-                        trace_data = katapult['traces'].get(trace_id)
-                    
-                    # If still not found, use our general trace lookup function
-                    if not trace_data:
-                        trace_data = get_trace_by_id(katapult, trace_id)
-                    
-                    if not trace_data:
-                        logger.warning(f"Could not find trace data for trace_id {trace_id}")
-                        continue
-                    
-                    # Extract company and cable_type
-                    company = trace_data.get('company', '')
-                    cable_type = trace_data.get('cable_type', '')
-                    wire_description = f"{company} {cable_type}".strip()
-                    
-                    # Create attachment record
-                    attachment = {
-                        'description': wire_description,
-                        'existing_height': inches_to_feet_inches_str(height_inches),
-                        'proposed_height': 'N/A',  # Will be filled in by Excel generation if available
-                        'midspan_proposed': 'N/A',  # Will be filled in by Excel generation if available
-                        'raw_existing_height_inches': height_inches,
-                        'trace_id': trace_id
-                    }
-                    attachments.append(attachment)
-            except Exception as e:
-                logger.error(f"Error processing photo {photo_id}: {str(e)}")
-        
-        # If we found attachments in the Katapult data, use those instead of pole_data.attachers
-        if attachments:
-            logger.info(f"Found {len(attachments)} attachments in Katapult data for pole {pole_number}")
-        else:
-            logger.warning(f"No attachments found in Katapult data for pole {pole_number}, falling back to pole_data.attachers")
-            attachments = pole_data.get('attachers', [])
-    else:
-        # If node not found, use attachers from pole_data (useful for testing)
-        logger.warning(f"Could not find node for pole {pole_number}, using attachers from pole_data")
-        attachments = pole_data.get('attachers', [])
-    
-    # Create a visualization of the pole with heights
-    visualize_pole_attachments(pole_data, neutral_height)
-    
-    # Create a list for keeping track of processed attachments (avoid duplicates)
-    processed_attachment_trace_ids = set()
-    
-    # Process all attachers and find those below the neutral
-    for attachment in attachments:
-        # Get height
-        if 'raw_existing_height_inches' in attachment:
-            # If we have already calculated raw height, use it
-            attachment_height_inches = attachment['raw_existing_height_inches']
-        else:
-            # Otherwise, try to parse from the height string
-            existing_height_str = attachment.get('existing_height')
             
-            # Skip attachments with no height data
-            if existing_height_str in (None, '', 'N/A'):
-                logger.warning(f"Skipping attachment with missing height: {attachment.get('description')}")
-                continue
-                
-            # Try to extract inches value from format like "34'-2\""
-            feet_inches_match = re.search(r'(\d+)\'(?:-)?(\d+)"', str(existing_height_str))
-            if feet_inches_match:
-                feet = int(feet_inches_match.group(1))
-                inches = int(feet_inches_match.group(2))
-                attachment_height_inches = (feet * 12) + inches
-            else:
-                # Try direct conversion from number
-                from make_ready_processor import process_wire_height
-                attachment_height_inches = process_wire_height({'_measured_height': existing_height_str})
-                
-        if attachment_height_inches is None:
-            logger.warning(f"Could not parse height for attachment: {attachment.get('description')}")
-            continue
-        
-        # Check if we've already processed this attachment (by trace_id)
-        trace_id = attachment.get('trace_id')
-        if trace_id and trace_id in processed_attachment_trace_ids:
-            logger.info(f"Skipping duplicate attachment with trace_id {trace_id}")
-            continue
-        
-        # Add to processed set if trace_id exists
-        if trace_id:
-            processed_attachment_trace_ids.add(trace_id)
-        
-        # Check if this attachment is below the neutral wire
-        if attachment_height_inches <= neutral_height:
-            logger.info(f"Attachment below neutral: {attachment.get('description')} at {attachment_height_inches} inches (neutral at {neutral_height} inches)")
-            attachments_below_neutral.append(attachment)
-        else:
-            logger.info(f"Attachment at or above neutral: {attachment.get('description')} at {attachment_height_inches} inches")
+            if not is_duplicate:
+                logger.info(f"Adding SPIDAcalc attachment below neutral: {spida_attachment.get('description')} at height {spida_attachment.get('existing_height')}")
+                attachments_below_neutral.append(spida_attachment)
+    
+    # Sort attachments by height (descending)
+    attachments_below_neutral.sort(
+        key=lambda x: x.get('raw_existing_height_inches', 0) or 0,
+        reverse=True
+    )
+    
+    logger.info(f"Found {len(attachments_below_neutral)} attachments below neutral for pole {pole_data.get('pole_number', 'Unknown')}")
     
     return attachments_below_neutral
 
-def inches_to_feet_inches_str(inches):
+def identify_spida_attachments_below_neutral(spida_pole_data, neutral_height):
     """
-    Convert inches to feet-inches string format.
-    This duplicates the function from make_ready_processor.py for independence.
+    Identify attachments below neutral height in SPIDAcalc data.
     
     Args:
-        inches: The height in inches
+        spida_pole_data (dict): The SPIDAcalc data for this pole
+        neutral_height (float): Height of the neutral wire in inches
         
     Returns:
-        str: Height formatted as "feet'-inches\""
+        list: List of attachments below neutral
     """
-    if inches is None:
-        return 'N/A'
-    try:
-        inches = float(inches)
-        feet = int(inches // 12)
-        rem_inches = int(round(inches % 12))
-        return f"{feet}'-{rem_inches}\""
-    except Exception:
-        return 'N/A'
+    attachments = []
+    
+    # Find measured design
+    measured_design = None
+    for design in spida_pole_data.get('designs', []):
+        if design.get('label', '').lower() == 'measured design':
+            measured_design = design
+            break
+    
+    if not measured_design:
+        return attachments
+    
+    # Process wires
+    for wire in measured_design.get('structure', {}).get('wires', []):
+        if not isinstance(wire, dict):
+            continue
+        
+        # Skip neutrals (already processed)
+        description = wire.get('clientItem', {}).get('description', '').lower()
+        usage_group = wire.get('usageGroup', '').lower()
+        if 'neutral' in description or 'neutral' in usage_group:
+            continue
+        
+        # Get height
+        height_meters = wire.get('attachmentHeight', {}).get('value')
+        if height_meters is None:
+            continue
+            
+        height_inches = height_meters * 39.3701
+        
+        # Compare with neutral height
+        if height_inches < neutral_height:
+            owner = wire.get('owner', {}).get('id', 'Unknown')
+            desc = wire.get('clientItem', {}).get('description', '')
+            
+            attachment = {
+                'description': f"{owner} {desc}".strip(),
+                'existing_height': inches_to_feet_inches_str(height_inches),
+                'proposed_height': 'N/A',
+                'midspan_proposed': 'N/A',
+                'raw_existing_height_inches': height_inches,
+                'source': 'spidacalc'
+            }
+            
+            attachments.append(attachment)
+    
+    # Process equipment
+    for equipment in measured_design.get('structure', {}).get('equipments', []):
+        if not isinstance(equipment, dict):
+            continue
+        
+        # Get height
+        height_meters = equipment.get('attachmentHeight', {}).get('value')
+        if height_meters is None:
+            continue
+            
+        height_inches = height_meters * 39.3701
+        
+        # Compare with neutral height
+        if height_inches < neutral_height:
+            owner = equipment.get('owner', {}).get('id', 'Unknown')
+            eq_type = equipment.get('clientItem', {}).get('type', '')
+            
+            attachment = {
+                'description': f"{owner} {eq_type}".strip(),
+                'existing_height': inches_to_feet_inches_str(height_inches),
+                'proposed_height': 'N/A',
+                'midspan_proposed': 'N/A',
+                'raw_existing_height_inches': height_inches,
+                'source': 'spidacalc'
+            }
+            
+            attachments.append(attachment)
+    
+    return attachments
 
 def visualize_pole_attachments(pole_data, neutral_height=None):
     """

@@ -1,51 +1,10 @@
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
-
-def inches_to_feet_inches_str(inches):
-    """
-    Convert inches to feet-inches string format.
-    This duplicates the function from make_ready_processor.py for independence.
-    """
-    if inches is None:
-        return 'N/A'
-    try:
-        inches = float(inches)
-        feet = int(inches // 12)
-        rem_inches = int(round(inches % 12))
-        return f"{feet}'-{rem_inches}\""
-    except Exception:
-        return 'N/A'
-
-def extract_string_value(value, default='N/A'):
-    """
-    Safely extract a string value from a potential dictionary.
-    This handles Katapult's nested attribute structure.
-    
-    Args:
-        value: The value to extract from (string, dictionary, or None)
-        default: Default value to return if extraction fails
-    
-    Returns:
-        str: The extracted string value
-    """
-    if value is None:
-        return default
-        
-    if isinstance(value, dict):
-        # Try to extract from common Katapult patterns
-        if '-Imported' in value:
-            return str(value['-Imported'])
-        elif 'assessment' in value:
-            return str(value['assessment'])
-        elif 'button_added' in value:
-            return str(value['button_added'])
-        # If we can't find a specific key, take the first value
-        elif value:
-            return str(next(iter(value.values())))
-    
-    # If not a dictionary or None, convert to string
-    return str(value)
+# Import shared utility to avoid duplicated stub implementation
+from trace_utils import get_trace_by_id
+from utils import inches_to_feet_inches_str, extract_string_value
+from wire_utils import parse_feet_inches_str_to_inches as feet_inches_str_to_inches
 
 def categorize_wire(wire_type):
     """Categorize wire as COMM, CPS, or OTHER based on description."""
@@ -154,20 +113,6 @@ def process_connection_heights(pole_data):
         
     return processed_heights
 
-def get_trace_by_id(pole_data, trace_id):
-    """
-    Helper function to get trace data by ID.
-    This is a simplified version of the function in make_ready_processor.py.
-    """
-    if not trace_id:
-        return {}
-    
-    # In this context, we need the full Katapult data which isn't directly available
-    # This is a placeholder - in actual implementation, would need to pass or access the full Katapult data
-    # For now, we'll just return an empty dict and assume the main processing has already
-    # added necessary trace data to each wire
-    return {}
-
 def determine_proposed_heights(pole_data, connection_heights):
     """
     Calculate proposed heights for each connection and wire type.
@@ -218,38 +163,54 @@ def identify_ref_subgroups(pole_data):
     """Identify reference subgroups that need special handling."""
     ref_groups = []
     
-    for connection in pole_data.get('connections', []):
-        # Check if this is a reference subgroup
-        # The actual logic depends on how these are identified in your data
-        is_ref = False
-        description = connection.get('to_pole', '')
-        
-        # Check for common patterns in service pole descriptions
-        if description and any(keyword in str(description).lower() 
-                             for keyword in ['service', 'red', 'north', 'south', 'east', 'west']):
-            is_ref = True
-        
-        if is_ref:
-            # Try to extract direction from description or use a default
-            direction = "North East"  # Default direction
-            
-            # Simple direction extraction - can be enhanced based on actual data patterns
-            if "north" in str(description).lower() and "east" in str(description).lower():
-                direction = "North East"
-            elif "north" in str(description).lower() and "west" in str(description).lower():
-                direction = "North West"
-            elif "south" in str(description).lower() and "east" in str(description).lower():
-                direction = "South East"
-            elif "south" in str(description).lower() and "west" in str(description).lower():
-                direction = "South West"
-            
-            # Create the label in all caps to match the reference format
+    # First check the reference_spans data that should be properly processed already
+    for ref_span in pole_data.get('reference_spans', []):
+        if isinstance(ref_span, dict) and 'header' in ref_span:
+            header = ref_span.get('header', {})
             ref_groups.append({
-                'connection_id': connection.get('connection_id'),
-                'label': f"REF ({direction.upper()}) TO {description}",
-                'from_pole': connection.get('from_pole'),
-                'to_pole': description
+                'connection_id': ref_span.get('connection_id', ''),
+                'label': header.get('description', ''),
+                'style_hint': header.get('style_hint', 'orange'),
+                'from_pole': pole_data.get('pole_number', ''),
+                'to_pole': header.get('to_pole', ''),
+                'attachments': ref_span.get('attachments', [])
             })
+    
+    # If we don't have any reference_spans data, fall back to connections
+    if not ref_groups:
+        for connection in pole_data.get('connections', []):
+            # Check if this is a reference subgroup
+            is_ref = False
+            description = connection.get('to_pole', '')
+            
+            # Check for common patterns in service pole descriptions
+            if description and any(keyword in str(description).lower() 
+                                for keyword in ['service', 'red', 'north', 'south', 'east', 'west']):
+                is_ref = True
+            
+            if is_ref:
+                # Try to extract direction from description or use a default
+                direction = "North East"  # Default direction
+                
+                # Simple direction extraction - can be enhanced based on actual data patterns
+                if "north" in str(description).lower() and "east" in str(description).lower():
+                    direction = "North East"
+                elif "north" in str(description).lower() and "west" in str(description).lower():
+                    direction = "North West"
+                elif "south" in str(description).lower() and "east" in str(description).lower():
+                    direction = "South East"
+                elif "south" in str(description).lower() and "west" in str(description).lower():
+                    direction = "South West"
+                
+                # Create the label in the format shown in the expected image
+                ref_groups.append({
+                    'connection_id': connection.get('connection_id'),
+                    'label': f"Ref ({direction}) to {description}",
+                    'style_hint': 'orange',  # Default to orange for normal references
+                    'from_pole': connection.get('from_pole'),
+                    'to_pole': description,
+                    'attachments': []  # Will be populated later
+                })
     
     return ref_groups
 
@@ -272,6 +233,7 @@ def create_make_ready_excel(processed_pole_data, output_filepath):
     
     light_blue_fill = PatternFill(start_color="ADD8E6", end_color="ADD8E6", fill_type="solid")
     orange_fill = PatternFill(start_color="FFCC99", end_color="FFCC99", fill_type="solid")
+    purple_fill = PatternFill(start_color="E6C3E6", end_color="E6C3E6", fill_type="solid")
     header_fill = PatternFill(start_color="A6C9EC", end_color="A6C9EC", fill_type="solid")
     yellow_fill = PatternFill(start_color="FFFFCC", end_color="FFFFCC", fill_type="solid")
     
@@ -400,10 +362,18 @@ def create_make_ready_excel(processed_pole_data, output_filepath):
     current_row = 4  # Start one row lower to account for subheaders
     operation_number = 1
     
+    # First pass: process only primary operation poles (those in SPIDAcalc)
     for pole in processed_pole_data:
-        # Use attachments_below_neutral if available, otherwise fall back to regular attachers
-        # This ensures the report shows attachments below the neutral wire as expected
-        attachers = pole.get('attachments_below_neutral', pole.get('attachers', []))
+        # Skip non-primary poles on the first pass
+        if not pole.get('is_primary', False):
+            continue
+            
+        print(f"[DEBUG] Processing primary pole: {pole.get('pole_number')}")
+        
+        # Consistently use pole.get('attachers', []) as the primary source for rendering items in columns L-O.
+        # It's assumed that any necessary filtering or ordering (like "attachments below neutral")
+        # has been handled upstream and incorporated into this 'attachers' list.
+        attachers = pole.get('attachers', [])
         
         # Calculate how many rows this pole will span
         # Start with attachers count and add rows for midspan data and separators
@@ -436,40 +406,80 @@ def create_make_ready_excel(processed_pole_data, output_filepath):
         pole_end_row = pole_start_row + total_rows - 1
         
         # ===== Write Pole-Level Data (Columns A-I) =====
-        # Merge cells for pole-level data if spanning multiple rows
+        # Apply header style to all cells in the operation header row
         for col in range(1, 10):
+            cell = ws.cell(row=pole_start_row, column=col)
+            cell.fill = header_fill  # Apply the blue header fill
+            cell.font = header_font  # Apply bold text for headers
+            
+            # Merge cells for pole-level data if spanning multiple rows
             if total_rows > 1:
                 ws.merge_cells(start_row=pole_start_row, start_column=col, 
                               end_row=pole_end_row, end_column=col)
             
             # Apply styling for merged cells
-            cell = ws.cell(row=pole_start_row, column=col)
             cell.border = thin_border
             cell.alignment = center_alignment
         
         # Fill in pole data - using extract_string_value to safely handle potential dictionaries
-        ws.cell(row=pole_start_row, column=1).value = operation_number  # Operation Number
-        ws.cell(row=pole_start_row, column=2).value = "(I)nstalling"  # Default to Installing
-        ws.cell(row=pole_start_row, column=3).value = extract_string_value(pole.get('pole_owner'))
+        ws.cell(row=pole_start_row, column=1).value = operation_number  # Operation Number (sequential for primary poles)
+        ws.cell(row=pole_start_row, column=2).value = extract_string_value(pole.get('pole_action', '(I)nstalling'))
+        ws.cell(row=pole_start_row, column=3).value = "CPS"  # Per spec, always CPS
         ws.cell(row=pole_start_row, column=4).value = extract_string_value(pole.get('pole_number'))
         ws.cell(row=pole_start_row, column=5).value = extract_string_value(pole.get('pole_structure'))
-        ws.cell(row=pole_start_row, column=6).value = extract_string_value(pole.get('proposed_riser', 'No'))
-        ws.cell(row=pole_start_row, column=7).value = extract_string_value(pole.get('proposed_guy', 'No'))
-        ws.cell(row=pole_start_row, column=8).value = extract_string_value(pole.get('pla_percentage'))
+        
+        # Make sure the proposed_riser and proposed_guy values are correctly formatted and capitalized
+        proposed_riser = extract_string_value(pole.get('proposed_riser', 'NO'))
+        proposed_guy = extract_string_value(pole.get('proposed_guy', 'NO'))
+        pla_percentage = extract_string_value(pole.get('pla_percentage', 'N/A'))
+        
+        # Debug output to see what's being processed
+        print(f"[DEBUG] Excel Values - Primary Pole: {pole.get('pole_number')}, Proposed Guy: {proposed_guy}, PLA: {pla_percentage}")
+        
+        # Ensure consistent capitalization
+        if proposed_riser.lower() == 'no':
+            proposed_riser = 'NO'
+        if proposed_guy.lower() == 'no':
+            proposed_guy = 'NO'
+            
+        # Write cell values
+        ws.cell(row=pole_start_row, column=6).value = proposed_riser
+        ws.cell(row=pole_start_row, column=7).value = proposed_guy
+        ws.cell(row=pole_start_row, column=8).value = pla_percentage
         ws.cell(row=pole_start_row, column=9).value = extract_string_value(pole.get('construction_grade'))
         
         # ===== Write Midspan Data (J-K) =====
-        # Per the screenshot, we first add the Height Lowest Com and Height Lowest CPS Electrical values
-        # directly below the column headers, and merge them vertically down to the From/To pole headers
-        
-        # For existing midspan data cell
+        # For existing midspan data cell (Columns J/K): use new midspan_heights helper
+        from_pole = extract_string_value(pole.get('from_pole'))
+        to_pole = extract_string_value(pole.get('to_pole'))
+        midspan_heights = pole.get('midspan_heights', {})
+        comm_val = 'NA'
+        cps_val = 'NA'
+        # Try both directions (from->to or to->from)
+        if midspan_heights:
+            # Try (from_pole, to_pole) as a tuple key
+            key_tuple = (from_pole, to_pole)
+            key_tuple_rev = (to_pole, from_pole)
+            # Try as string keys (legacy)
+            if key_tuple in midspan_heights:
+                comm_val = midspan_heights[key_tuple].get('comm', 'NA')
+                cps_val = midspan_heights[key_tuple].get('cps', 'NA')
+            elif key_tuple_rev in midspan_heights:
+                comm_val = midspan_heights[key_tuple_rev].get('comm', 'NA')
+                cps_val = midspan_heights[key_tuple_rev].get('cps', 'NA')
+            elif to_pole in midspan_heights:
+                comm_val = midspan_heights[to_pole].get('comm', 'NA')
+                cps_val = midspan_heights[to_pole].get('cps', 'NA')
+            elif from_pole in midspan_heights:
+                comm_val = midspan_heights[from_pole].get('comm', 'NA')
+                cps_val = midspan_heights[from_pole].get('cps', 'NA')
         lowest_com_cell = ws.cell(row=pole_start_row, column=10)
-        lowest_com_cell.value = extract_string_value(pole.get('existing_midspan_lowest_com'))
+        lowest_com_cell.value = comm_val
         lowest_com_cell.alignment = center_alignment
         lowest_com_cell.border = thin_border
-        
+
         lowest_cps_cell = ws.cell(row=pole_start_row, column=11)
-        lowest_cps_cell.value = extract_string_value(pole.get('existing_midspan_lowest_cps_electrical'))
+        lowest_cps_cell.value = cps_val
         lowest_cps_cell.alignment = center_alignment
         lowest_cps_cell.border = thin_border
         
@@ -488,16 +498,20 @@ def create_make_ready_excel(processed_pole_data, output_filepath):
                 
                 # Determine fill color based on style_hint
                 if style_hint == 'orange':
-                    header_fill = PatternFill(start_color="FFCC99", end_color="FFCC99", fill_type="solid")  # Orange
+                    header_fill_color = orange_fill
                 elif style_hint == 'purple':
-                    header_fill = PatternFill(start_color="E6C3E6", end_color="E6C3E6", fill_type="solid")  # Light Purple
+                    header_fill_color = purple_fill
                 elif style_hint == 'light-blue':
-                    header_fill = PatternFill(start_color="ADD8E6", end_color="ADD8E6", fill_type="solid")  # Light Blue
+                    header_fill_color = light_blue_fill
                 else:
-                    header_fill = PatternFill(start_color="FFCC99", end_color="FFCC99", fill_type="solid")  # Default to Orange
+                    # If header text contains South East, use purple
+                    if 'south east' in header_text.lower() or 'southeast' in header_text.lower():
+                        header_fill_color = purple_fill
+                    else:
+                        header_fill_color = orange_fill  # Default to Orange
                 
                 # Apply styles
-                header_cell.fill = header_fill
+                header_cell.fill = header_fill_color
                 header_cell.font = header_font
                 header_cell.alignment = center_alignment
                 header_cell.border = thin_border
@@ -522,10 +536,10 @@ def create_make_ready_excel(processed_pole_data, output_filepath):
             existing_height = extract_string_value(attacher.get('existing_height'))
             proposed_height = extract_string_value(attacher.get('proposed_height'))
             midspan_proposed = extract_string_value(attacher.get('midspan_proposed'))
-            
+
             # Set the cell values
             ws.cell(row=attacher_row, column=13).value = existing_height
-            ws.cell(row=attacher_row, column=14).value = proposed_height
+            ws.cell(row=attacher_row, column=14).value = proposed_height if proposed_height not in (None, '', 'N/A') else ''
             ws.cell(row=attacher_row, column=15).value = midspan_proposed
             
             # Apply border and alignment
@@ -605,87 +619,134 @@ def create_make_ready_excel(processed_pole_data, output_filepath):
         proposed_midspan_cell.alignment = center_alignment
         proposed_midspan_cell.border = thin_border
         
-        # Current row after midspan data
+        # Process REF Groups for this primary pole
         current_row = midspan_row + 1
         
         # ===== Write REF Groups =====
         for ref_group in ref_groups:
             # REF Group Header
             ref_header_row = current_row
-            ref_header_cell = ws.cell(row=ref_header_row, column=10)
-            ref_header_cell.value = extract_string_value(ref_group.get('label'))
             
-            # Apply special formatting with orange-peach background
-            ref_header_cell.fill = orange_fill
+            # Determine fill color based on style_hint and label
+            ref_fill = orange_fill  # Default to orange
+            ref_label = extract_string_value(ref_group.get('label', ''))
+            
+            if ref_group.get('style_hint') == 'purple':
+                ref_fill = purple_fill
+            elif ref_group.get('style_hint') == 'light-blue':
+                ref_fill = light_blue_fill
+            # Also check the label for South East references
+            elif 'south east' in ref_label.lower() or 'southeast' in ref_label.lower():
+                ref_fill = purple_fill
+            
+            # We need to place the header in column L (12), not column J (10)
+            # This matches the expected image where reference spans appear in the Make Ready Data section
+            ref_header_cell = ws.cell(row=ref_header_row, column=12)
+            ref_header_cell.value = ref_label
+            
+            # Apply special formatting
+            ref_header_cell.fill = ref_fill
             ref_header_cell.font = header_font
             ref_header_cell.alignment = center_alignment
             ref_header_cell.border = thin_border
             
-            # Merge cells J-K for header (after setting the value)
-            ws.merge_cells(start_row=ref_header_row, start_column=10, 
-                          end_row=ref_header_row, end_column=11)
+            # Merge cells L-O for header (columns 12-15)
+            ws.merge_cells(start_row=ref_header_row, start_column=12, 
+                          end_row=ref_header_row, end_column=15)
+            
+            # Add borders to all merged cells
+            for col in range(12, 16):
+                cell = ws.cell(row=ref_header_row, column=col)
+                cell.border = thin_border
             
             # Move to next row for wire data
             current_row += 1
             
-            # Write wire data for this REF group
-            connection_id = ref_group.get('connection_id')
-            if connection_id in connection_heights:
-                for wire_type, height_data in connection_heights[connection_id].items():
-                    # Wire description
-                    desc_cell = ws.cell(row=current_row, column=10)
-                    desc_cell.value = extract_string_value(wire_type)
+            # Try to use attachments from the reference span data first
+            attachments = ref_group.get('attachments', [])
+            
+            if attachments:
+                # Use pre-processed attachments if available
+                for att in attachments:
+                    # Attacher description
+                    desc_cell = ws.cell(row=current_row, column=12)
+                    desc_cell.value = extract_string_value(att.get('description'))
                     desc_cell.alignment = Alignment(horizontal='left', vertical='center')
                     desc_cell.border = thin_border
                     
                     # Existing height
-                    height_cell = ws.cell(row=current_row, column=11)
-                    height_cell.value = extract_string_value(height_data.get('height_str'))
-                    height_cell.alignment = center_alignment
-                    height_cell.border = thin_border
+                    existing_cell = ws.cell(row=current_row, column=13)
+                    existing_cell.value = extract_string_value(att.get('existing_height'))
+                    existing_cell.alignment = center_alignment
+                    existing_cell.border = thin_border
                     
-                    # Proposed height in column O
-                    proposed_cell = ws.cell(row=current_row, column=15)
-                    
-                    # Check if there's a proposed height
-                    has_proposed = (connection_id in proposed_heights and 
-                                   wire_type in proposed_heights[connection_id])
-                    
-                    if has_proposed:
-                        # Show proposed height
-                        proposed_cell.value = extract_string_value(proposed_heights[connection_id][wire_type].get('height_str'))
-                    else:
-                        # Show existing height in parentheses
-                        proposed_cell.value = f"({extract_string_value(height_data.get('height_str'))})"
-                    
+                    # Proposed height
+                    proposed_cell = ws.cell(row=current_row, column=14)
+                    proposed_cell.value = extract_string_value(att.get('proposed_height'))
                     proposed_cell.alignment = center_alignment
                     proposed_cell.border = thin_border
                     
-                    # Add empty cells with borders for columns L-N
-                    for col in range(12, 15):
-                        cell = ws.cell(row=current_row, column=col)
-                        cell.border = thin_border
+                    # Midspan proposed
+                    midspan_cell = ws.cell(row=current_row, column=15)
+                    midspan_cell.value = extract_string_value(att.get('midspan_proposed'))
+                    midspan_cell.alignment = center_alignment
+                    midspan_cell.border = thin_border
                     
                     current_row += 1
             else:
-                # No wire data, just add an empty row
-                for col in range(10, 16):
-                    cell = ws.cell(row=current_row, column=col)
-                    cell.border = thin_border
-                current_row += 1
+                # Fall back to connection_heights data
+                connection_id = ref_group.get('connection_id')
+                if connection_id in connection_heights:
+                    for wire_type, height_data in connection_heights[connection_id].items():
+                        # Wire description in column L
+                        desc_cell = ws.cell(row=current_row, column=12)
+                        desc_cell.value = extract_string_value(wire_type)
+                        desc_cell.alignment = Alignment(horizontal='left', vertical='center')
+                        desc_cell.border = thin_border
+                        
+                        # Existing height in column M
+                        existing_cell = ws.cell(row=current_row, column=13)
+                        existing_cell.value = extract_string_value(height_data.get('height_str'))
+                        existing_cell.alignment = center_alignment
+                        existing_cell.border = thin_border
+                        
+                        # Proposed height in column N
+                        proposed_cell = ws.cell(row=current_row, column=14)
+                        proposed_cell.alignment = center_alignment
+                        proposed_cell.border = thin_border
+                        
+                        # Check if there's a proposed height
+                        has_proposed = (connection_id in proposed_heights and 
+                                      wire_type in proposed_heights[connection_id])
+                        
+                        if has_proposed:
+                            # Show proposed height
+                            proposed_cell.value = extract_string_value(proposed_heights[connection_id][wire_type].get('height_str'))
+                        
+                        # Midspan proposed in column O
+                        midspan_cell = ws.cell(row=current_row, column=15)
+                        midspan_cell.alignment = center_alignment
+                        midspan_cell.border = thin_border
+                        
+                        # Try to determine an appropriate midspan value based on wire type
+                        midspan_height_in = None
+                        if 'midspanHeight_in' in height_data['wire_data']:
+                            midspan_height_in = height_data['wire_data'].get('midspanHeight_in')
+                            midspan_cell.value = inches_to_feet_inches_str(midspan_height_in)
+                        
+                        current_row += 1
         
-        # Add separator row if needed
+        # Add blank row to separate poles
         for col in range(1, 16):
             cell = ws.cell(row=current_row, column=col)
             cell.border = thin_border
-            
-        # Move to next operation
-        operation_number += 1
+        
         current_row += 1
-    
+        operation_number += 1  # Increment only for primary poles
+
     # Save the workbook
     wb.save(output_filepath)
-    return output_filepath
+    print(f"[INFO] Make Ready Report saved to {output_filepath}")
 
 # If you need to test the function independently
 if __name__ == "__main__":
@@ -754,4 +815,4 @@ if __name__ == "__main__":
         }
     ]
     
-    create_make_ready_excel(test_data, "test_output.xlsx") 
+    create_make_ready_excel(test_data, "test_output.xlsx")
